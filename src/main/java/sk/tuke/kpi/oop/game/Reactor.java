@@ -8,7 +8,7 @@ import sk.tuke.kpi.oop.game.actions.PerpetualReactorHeating;
 import sk.tuke.kpi.oop.game.tools.FireExtinguisher;
 import sk.tuke.kpi.oop.game.tools.Hammer;
 
-public class Reactor extends AbstractActor {
+public class Reactor extends AbstractActor implements Switchable {
 
     private static final int REACTOR_OFF = 0;
     private static final int REACTOR_ON = 1;
@@ -51,13 +51,7 @@ public class Reactor extends AbstractActor {
 
     public void increaseTemperature(int increment) {
 
-        if (increment <= 0 || !isRunning()) {
-            return;
-        }
-
-        if(increment > 2000){
-            increaseTemperature(2000);
-            increaseTemperature(increment - 2000);
+        if (increment <= 0 || !isOn()) {
             return;
         }
 
@@ -101,19 +95,12 @@ public class Reactor extends AbstractActor {
             damage = newDamage;
         }
 
-//        if(temperature == 6000){
-//            state = REACTOR_BROKEN;
-//        } else if(temperature >= 4000) {
-//            state = REACTOR_HOT;
-//        } else {
-//            state = REACTOR_ON;
-//        }
         updateAnimation();
     }
 
     public void decreaseTemperature(int decrement) {
 
-        if(decrement <= 0 || !isRunning()) {
+        if(decrement <= 0 || !isOn()) {
             return;
         }
 
@@ -141,7 +128,7 @@ public class Reactor extends AbstractActor {
         int currentDamage = getDamage();
         float frameDuration = 0.1f;
 
-        if(isRunning()) {
+        if(isOn()) {
             if(currentDamage >= 90 && currentDamage < 100) {
                  frameDuration = 0.05f;
             } else if(currentDamage >= 80) {
@@ -153,22 +140,22 @@ public class Reactor extends AbstractActor {
             }
         }
 
-        if (currentDamage == 100 && state != REACTOR_BROKEN && isRunning()) {
+        if (currentDamage == 100 && state != REACTOR_BROKEN && isOn()) {
             state = REACTOR_BROKEN;
             this.isOn = false;
             if(light != null) light.setElectricityFlow(false);
             animation = new Animation("sprites/reactor_broken.png", 80, 80, 0.17f, Animation.PlayMode.LOOP_PINGPONG);
             setAnimation(animation);
             if(this.light != null)light.setElectricityFlow(false);
-        } else if (currentTemp >= 4000 && state != REACTOR_HOT && isRunning()) {
+        } else if (currentTemp >= 4000 && state != REACTOR_HOT && isOn()) {
             state = REACTOR_HOT;
             this.animation  = new Animation("sprites/reactor_hot.png", 80, 80, frameDuration, Animation.PlayMode.LOOP_PINGPONG);
             setAnimation(animation);
-        } else if (currentTemp < 4000 && state != REACTOR_ON && isRunning()) {
+        } else if (currentTemp < 4000 && state != REACTOR_ON && isOn()) {
             state = REACTOR_ON;
             animation  = new Animation("sprites/reactor_on.png", 80, 80, frameDuration, Animation.PlayMode.LOOP_PINGPONG);
             setAnimation(animation);
-        } else if (!isRunning() && state != REACTOR_BROKEN) {
+        } else if (!isOn() && state != REACTOR_BROKEN) {
             animation = new Animation("sprites/reactor.png", 80, 80, frameDuration, Animation.PlayMode.LOOP_PINGPONG);
             setAnimation(animation);
         }
@@ -185,7 +172,7 @@ public class Reactor extends AbstractActor {
         }
     }
 
-    public void extinguishWith(FireExtinguisher fireExtinguisher) {
+    public void extinguish(FireExtinguisher fireExtinguisher) {
         if(fireExtinguisher != null && state == REACTOR_BROKEN && fireExtinguisher.getExtinguisherUseNum() != 0) {
             fireExtinguisher.useWith(this);
             decreaseTemperature(4000); //??? or change the temperature directly?
@@ -194,7 +181,7 @@ public class Reactor extends AbstractActor {
         }
     }
 
-    public boolean isRunning() {
+    public boolean isOn() {
         return this.isOn;
     }
 
@@ -216,7 +203,7 @@ public class Reactor extends AbstractActor {
     }
 
     public void addLight(Light light) {
-        if(isRunning()) {
+        if(isOn()) {
             this.light = light;
         }
     }

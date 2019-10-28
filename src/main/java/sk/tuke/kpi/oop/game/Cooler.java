@@ -40,7 +40,7 @@ public class Cooler extends AbstractActor {
     }
 
     public void coolReactor() {
-        if(isOn()) {
+        if(isOn() && reactor != null) {
             reactor.decreaseTemperature(1);
         }
     }
