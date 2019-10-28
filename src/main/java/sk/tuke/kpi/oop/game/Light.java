@@ -10,10 +10,10 @@ public class Light extends AbstractActor {
 
     private boolean isPowered;
     private boolean isOn;
-    private Animation animation;
 
     public Light() {
         this.isOn = false;
+        this.isPowered = false;
         setAnimation(animationOff);
     }
 
