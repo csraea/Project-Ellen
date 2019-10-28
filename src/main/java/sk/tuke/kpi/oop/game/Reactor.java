@@ -177,7 +177,7 @@ public class Reactor extends AbstractActor {
     public void repairWith(Hammer hammer) {
         int damage = getDamage();
         if(hammer != null && damage > 0 && damage < 100) {
-            hammer.use();
+            hammer.useWith(this);
             damage -= 50;
             setDamage((damage >= 0) ? damage : 0);
             //  place here a function to decrease temperature according to the level of damage
@@ -187,7 +187,7 @@ public class Reactor extends AbstractActor {
 
     public void extinguishWith(FireExtinguisher fireExtinguisher) {
         if(fireExtinguisher != null && state == REACTOR_BROKEN && fireExtinguisher.getExtinguisherUseNum() != 0) {
-            fireExtinguisher.use();
+            fireExtinguisher.useWith(this);
             decreaseTemperature(4000); //??? or change the temperature directly?
             animation = new Animation("sprites/reactor_extinguished.png", 80, 80, 0.1f, Animation.PlayMode.LOOP_PINGPONG);
             setAnimation(animation);
