@@ -15,7 +15,7 @@ public class Hammer extends BreakableTool {
         Animation animation = new Animation("sprites/hammer.png");
         setAnimation(animation);
     }
-    
+
     public int getHammerUseNum() {
         return super.getRemainingUses();
     }
