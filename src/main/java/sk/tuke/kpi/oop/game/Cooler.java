@@ -13,13 +13,11 @@ public class Cooler extends AbstractActor {
     private final Animation offAnimation = new Animation("sprites/fan.png", 32, 32, 0.2f, Animation.PlayMode.ONCE);
 
     private boolean isOn;
-    private Animation animation;
     private Reactor reactor;
 
     public Cooler(Reactor reactor) {
         this.isOn = false;
         this.reactor = reactor;
-        this.animation = offAnimation;
         setAnimation(offAnimation);
     }
 
@@ -33,13 +31,11 @@ public class Cooler extends AbstractActor {
 
     public void turnOn() {
         this.isOn = true;
-        this.animation = onAnimation;
         setAnimation(onAnimation);
     }
 
     public void turnOff() {
         this.isOn = false;
-        this.animation = offAnimation;
         setAnimation(offAnimation);
     }
 

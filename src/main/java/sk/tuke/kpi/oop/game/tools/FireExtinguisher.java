@@ -4,11 +4,9 @@ import sk.tuke.kpi.gamelib.graphics.Animation;
 
 public class FireExtinguisher extends BreakableTool {
 
-    private Animation animation;
-
     public FireExtinguisher() {
         super(1);
-        animation = new Animation("sprites/extinguisher.png");
+        Animation animation = new Animation("sprites/extinguisher.png");
         setAnimation(animation);
     }
 
