@@ -5,8 +5,8 @@ import sk.tuke.kpi.gamelib.Scene;
 import sk.tuke.kpi.gamelib.framework.AbstractActor;
 import sk.tuke.kpi.gamelib.graphics.Animation;
 import sk.tuke.kpi.oop.game.actions.PerpetualReactorHeating;
+import sk.tuke.kpi.oop.game.tools.BreakableTool;
 import sk.tuke.kpi.oop.game.tools.FireExtinguisher;
-import sk.tuke.kpi.oop.game.tools.Hammer;
 
 public class Reactor extends AbstractActor implements Switchable, Repairable {
 
@@ -162,10 +162,10 @@ public class Reactor extends AbstractActor implements Switchable, Repairable {
     }
 
     @Override
-    public boolean repair(Hammer hammer) {
+    public boolean repair(BreakableTool breakableTool) {
         int damage = getDamage();
-        if(hammer != null && damage > 0 && damage < 100) {
-            hammer.useWith(this);
+        if(breakableTool != null && damage > 0 && damage < 100 && breakableTool.getRemainingUses() > 0) {
+            breakableTool.useWith(this);
             damage -= 50;
             setDamage((damage >= 0) ? damage : 0);
             //  place here a function to decrease temperature according to the level of damage
