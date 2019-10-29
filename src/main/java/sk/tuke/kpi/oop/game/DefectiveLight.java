@@ -14,9 +14,9 @@ public class DefectiveLight extends Light {
     public void setLightDefect() {
         int randomNum = (int) (Math.random() * 10) + 1;
         if(randomNum == 1) {
-            super.setElectricityFlow(false);
+            super.setPowered(false);
         } else {
-            super.setElectricityFlow(true);
+            super.setPowered(true);
         }
     }
 

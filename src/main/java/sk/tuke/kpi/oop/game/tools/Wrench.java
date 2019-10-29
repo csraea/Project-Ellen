@@ -15,5 +15,6 @@ public class Wrench extends BreakableTool implements Usable {
     @Override
     public void useWith(Actor actor) {
         if(actor.equals(new DefectiveLight())) super.useWith(actor);
+        
     }
 }
