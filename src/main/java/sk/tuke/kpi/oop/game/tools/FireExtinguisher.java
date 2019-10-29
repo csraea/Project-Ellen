@@ -1,9 +1,9 @@
 package sk.tuke.kpi.oop.game.tools;
 
-import sk.tuke.kpi.gamelib.Actor;
 import sk.tuke.kpi.gamelib.graphics.Animation;
+import sk.tuke.kpi.oop.game.Reactor;
 
-public class FireExtinguisher extends BreakableTool<Actor> {
+public class FireExtinguisher extends BreakableTool<Reactor> {
 
     public FireExtinguisher() {
         super(1);
@@ -16,8 +16,10 @@ public class FireExtinguisher extends BreakableTool<Actor> {
     }
 
     @Override
-    public void useWith(Actor actor) {
-        super.useWith(actor);
+    public void useWith(Reactor reactor) {
+        if(getExtinguisherUseNum() > 0) {
+            if(reactor.extinguish()) super.useWith(reactor);
+        }
     }
 
 }

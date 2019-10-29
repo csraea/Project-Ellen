@@ -1,10 +1,9 @@
 package sk.tuke.kpi.oop.game.tools;
 
-import sk.tuke.kpi.gamelib.Actor;
 import sk.tuke.kpi.gamelib.graphics.Animation;
 import sk.tuke.kpi.oop.game.DefectiveLight;
 
-public class Wrench extends BreakableTool implements Usable {
+public class Wrench extends BreakableTool<DefectiveLight> {
 
     public Wrench() {
         super(2);
@@ -13,8 +12,7 @@ public class Wrench extends BreakableTool implements Usable {
     }
 
     @Override
-    public void useWith(Actor actor) {
-        if(actor.equals(new DefectiveLight())) super.useWith(actor);
-
+    public void useWith(DefectiveLight defectiveLight) {
+        super.useWith(defectiveLight);
     }
 }

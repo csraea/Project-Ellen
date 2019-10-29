@@ -1,9 +1,9 @@
 package sk.tuke.kpi.oop.game.tools;
 
-import sk.tuke.kpi.gamelib.Actor;
 import sk.tuke.kpi.gamelib.graphics.Animation;
+import sk.tuke.kpi.oop.game.Reactor;
 
-public class Hammer extends BreakableTool<Actor> {
+public class Hammer extends BreakableTool<Reactor> {
 
     public Hammer(int uses) {
         super(uses);
@@ -20,7 +20,9 @@ public class Hammer extends BreakableTool<Actor> {
     }
 
     @Override
-    public void useWith(Actor actor) {
-        super.useWith(actor);
+    public void useWith(Reactor reactor) {
+        if(getHammerUseNum() > 0) {
+            if(reactor.repair()) super.useWith(reactor);
+        }
     }
 }

@@ -5,7 +5,7 @@ import sk.tuke.kpi.gamelib.Scene;
 import sk.tuke.kpi.gamelib.actions.Invoke;
 import sk.tuke.kpi.gamelib.framework.actions.Loop;
 
-public class DefectiveLight extends Light {
+public class DefectiveLight extends Light implements Repairable{
 
     public DefectiveLight() {
         super();
@@ -18,6 +18,13 @@ public class DefectiveLight extends Light {
         } else {
             super.setPowered(true);
         }
+    }
+
+    @Override
+    public boolean repair(){
+        super.setPowered(true);
+        //new Wait<>(10);
+        return true;
     }
 
     @Override

@@ -5,8 +5,6 @@ import sk.tuke.kpi.gamelib.Scene;
 import sk.tuke.kpi.gamelib.framework.AbstractActor;
 import sk.tuke.kpi.gamelib.graphics.Animation;
 import sk.tuke.kpi.oop.game.actions.PerpetualReactorHeating;
-import sk.tuke.kpi.oop.game.tools.BreakableTool;
-import sk.tuke.kpi.oop.game.tools.FireExtinguisher;
 
 public class Reactor extends AbstractActor implements Switchable, Repairable {
 
@@ -162,10 +160,9 @@ public class Reactor extends AbstractActor implements Switchable, Repairable {
     }
 
     @Override
-    public boolean repair(BreakableTool breakableTool) {
+    public boolean repair() {
         int damage = getDamage();
-        if(breakableTool != null && damage > 0 && damage < 100 && breakableTool.getRemainingUses() > 0) {
-            breakableTool.useWith(this);
+        if(damage > 0 && damage < 100) {
             damage -= 50;
             setDamage((damage >= 0) ? damage : 0);
             //  place here a function to decrease temperature according to the level of damage
@@ -175,9 +172,8 @@ public class Reactor extends AbstractActor implements Switchable, Repairable {
         return false;
     }
 
-    public boolean extinguish(FireExtinguisher fireExtinguisher) {
-        if(fireExtinguisher != null && state == REACTOR_BROKEN && fireExtinguisher.getExtinguisherUseNum() != 0) {
-            fireExtinguisher.useWith(this);
+    public boolean extinguish() {
+        if( state == REACTOR_BROKEN ) {
             decreaseTemperature(4000); //??? or change the temperature directly?
             animation = new Animation("sprites/reactor_extinguished.png", 80, 80, 0.1f, Animation.PlayMode.LOOP_PINGPONG);
             setAnimation(animation);
