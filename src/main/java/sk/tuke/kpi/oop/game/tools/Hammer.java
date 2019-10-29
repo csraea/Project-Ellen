@@ -19,6 +19,8 @@ public class Hammer extends BreakableTool<Actor> {
         return super.getRemainingUses();
     }
 
-
-
+    @Override
+    public void useWith(Actor actor) {
+        super.useWith(actor);
+    }
 }
