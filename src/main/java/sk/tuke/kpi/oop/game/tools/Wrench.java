@@ -11,8 +11,7 @@ public class Wrench extends BreakableTool<DefectiveLight> {
         setAnimation(animation);
     }
 
-    @Override
     public void useWith(DefectiveLight defectiveLight) {
-        super.useWith(defectiveLight);
+        if(defectiveLight != null) super.useWith(defectiveLight);
     }
 }

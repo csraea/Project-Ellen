@@ -17,7 +17,7 @@ public class FireExtinguisher extends BreakableTool<Reactor> {
 
     @Override
     public void useWith(Reactor reactor) {
-        if(getExtinguisherUseNum() > 0 && reactor.extinguish()) {
+        if(reactor != null && getExtinguisherUseNum() > 0 && reactor.extinguish()) {
            super.useWith(reactor);
         }
     }
