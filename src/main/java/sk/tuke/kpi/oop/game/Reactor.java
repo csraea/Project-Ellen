@@ -144,18 +144,21 @@ public class Reactor extends AbstractActor implements Switchable, Repairable {
             if(energyConsumer != null) energyConsumer.setPowered(false);
             animation = new Animation("sprites/reactor_broken.png", 80, 80, 0.17f, Animation.PlayMode.LOOP_PINGPONG);
             setAnimation(animation);
-            if(this.energyConsumer != null) energyConsumer.setPowered(false);
         } else if (currentTemp >= 4000 && state != REACTOR_HOT && isOn()) {
             state = REACTOR_HOT;
             this.animation  = new Animation("sprites/reactor_hot.png", 80, 80, frameDuration, Animation.PlayMode.LOOP_PINGPONG);
             setAnimation(animation);
+            if(this.energyConsumer != null) energyConsumer.setPowered(true);
         } else if (currentTemp < 4000 && state != REACTOR_ON && isOn()) {
             state = REACTOR_ON;
             animation  = new Animation("sprites/reactor_on.png", 80, 80, frameDuration, Animation.PlayMode.LOOP_PINGPONG);
             setAnimation(animation);
+            if(this.energyConsumer != null) energyConsumer.setPowered(true);
         } else if (!isOn() && state != REACTOR_BROKEN) {
             animation = new Animation("sprites/reactor.png", 80, 80, frameDuration, Animation.PlayMode.LOOP_PINGPONG);
             setAnimation(animation);
+            state = REACTOR_OFF;
+            if(this.energyConsumer != null) energyConsumer.setPowered(false);
         }
     }
 
@@ -206,6 +209,8 @@ public class Reactor extends AbstractActor implements Switchable, Repairable {
     public void addDevice(EnergyConsumer energyConsumer) {
         if(isOn()) {
             this.energyConsumer = energyConsumer;
+            if(isOn() && state != REACTOR_BROKEN && state != REACTOR_OFF)
+                energyConsumer.setPowered(true);
         }
     }
 

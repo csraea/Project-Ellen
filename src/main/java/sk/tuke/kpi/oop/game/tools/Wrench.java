@@ -11,7 +11,10 @@ public class Wrench extends BreakableTool<DefectiveLight> {
         setAnimation(animation);
     }
 
+    @Override
     public void useWith(DefectiveLight defectiveLight) {
-        if(defectiveLight != null) super.useWith(defectiveLight);
+        if(defectiveLight != null && getRemainingUses() > 0 && defectiveLight.repair()) {
+            super.useWith(defectiveLight);
+        }
     }
 }
