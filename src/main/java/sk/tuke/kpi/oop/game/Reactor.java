@@ -9,8 +9,6 @@ import sk.tuke.kpi.oop.game.actions.PerpetualReactorHeating;
 public class Reactor extends AbstractActor implements Switchable, Repairable {
 
     private static final int REACTOR_OFF = 0;
-    private static final int REACTOR_ON = 1;
-    private static final int REACTOR_HOT = 2;
     private static final int REACTOR_BROKEN = 3;
     private static final int REACTOR_EXTINGUISHED = 4;
 
@@ -54,36 +52,20 @@ public class Reactor extends AbstractActor implements Switchable, Repairable {
 
     public void increaseTemperature(int increment) {
 
-        if (increment <= 0 || !isOn() || getDamage() >= 100)    return;
+        if (increment <= 0 || !isOn || temperature > 6000)    return;
 
-        float coefficient = 1f;
+        float coefficient = ((damage >= 33 && damage <= 66) ? 1.5f : ((damage > 66) ? 2f : 1f));
 
-        if (getDamage() >= 33 && getDamage() <= 66) {
-            coefficient = 1.5f;
-        } else if (getDamage() > 66) {
-            coefficient = 2f;
-        }
+        double newIncrement = increment * coefficient;
+        newIncrement = (newIncrement % 1 != 0) ? newIncrement - newIncrement % 1 + 1 : newIncrement;
 
-        //rounding up
-        double roundedTemp = increment * coefficient;
-        if (roundedTemp % 1 != 0) {
-            roundedTemp -= roundedTemp % 1;
-            roundedTemp++;
-        }
+        double newDamage = ((float)(temperature + newIncrement) - 2000f) / 40f;
+        newDamage = (newDamage > 0) ? (int) (newDamage - newDamage % 1) : damage;
 
-        double temp = (getTemperature() + roundedTemp - 2000) / 40;
-        int newDamage = getDamage();
-        if (temp > 0) {
-            newDamage = (int) (temp - temp % 1);
-        }
-        int newTemperature = (int) (getTemperature() + roundedTemp);
+        int newTemperature = (int) (temperature + newIncrement);
 
-        if (newDamage > 100 || newTemperature > 6000) {
-            damage = 100;
-        } else {
-            temperature = newTemperature;
-            damage = newDamage;
-        }
+        damage = (newDamage > 100 || newTemperature > 6000) ? 100 : (int) newDamage;
+        temperature = newTemperature;
 
         updateAnimation();
     }
@@ -109,34 +91,16 @@ public class Reactor extends AbstractActor implements Switchable, Repairable {
     }
 
     private void updateAnimation() {
-        int currentTemp = getTemperature();
-        int currentDamage = getDamage();
-
-        if(currentDamage < 100 && currentTemp < 4000 && isOn() && state != REACTOR_ON) {
-            state = REACTOR_ON;
-            setAnimation(A_reactorOn);
-            return;
+        if(isOn) {
+            if(temperature <= 4000) {
+                setAnimation(A_reactorOn);
+            } else if(temperature < 6000) {
+                setAnimation(A_reactorHot);
+            } else {
+                setAnimation(A_reactorBroken);
+                isOn = false;
+            }
         }
-
-        if(currentTemp >= 4000 && isOn() && state != REACTOR_HOT) {
-            state = REACTOR_HOT;
-            setAnimation(A_reactorHot);
-            return;
-        }
-
-        if(currentDamage == 100 && state != REACTOR_BROKEN && isOn()) {
-            state = REACTOR_BROKEN;
-            this.isOn = false;
-            if(energyConsumer != null) energyConsumer.setPowered(false);
-            setAnimation(A_reactorBroken);
-            return;
-        }
-
-        if(!isOn() && state != REACTOR_BROKEN && state != REACTOR_EXTINGUISHED) {
-            state = REACTOR_OFF;
-            setAnimation(A_reactorOff);
-        }
-
     }
 
     @Override
@@ -145,7 +109,8 @@ public class Reactor extends AbstractActor implements Switchable, Repairable {
         if(damage > 0 && damage < 100) {
             damage -= 50;
             setDamage((damage >= 0) ? damage : 0);
-            decreaseTemperature(2000);
+            temperature -= 2000;
+            temperature = (temperature < 0) ? 0 : temperature;
             updateAnimation();
             return true;
         }
@@ -168,7 +133,7 @@ public class Reactor extends AbstractActor implements Switchable, Repairable {
     }
 
     public void turnOn() {
-        if(this.state != REACTOR_BROKEN && this.state != REACTOR_ON) {
+        if(state != REACTOR_BROKEN && !isOn) {
             this.isOn = true;
             if(this.energyConsumer != null) energyConsumer.setPowered(true);
             updateAnimation();
@@ -176,7 +141,7 @@ public class Reactor extends AbstractActor implements Switchable, Repairable {
     }
 
     public void turnOff() {
-        if(this.state != REACTOR_BROKEN && this.state != REACTOR_OFF) {
+        if(this.state != REACTOR_BROKEN && isOn) {
             this.isOn = false;
             if(this.energyConsumer != null) energyConsumer.setPowered(false);
             updateAnimation();
@@ -186,7 +151,7 @@ public class Reactor extends AbstractActor implements Switchable, Repairable {
     public void addDevice(EnergyConsumer energyConsumer) {
         if(isOn()) {
             this.energyConsumer = energyConsumer;
-            if(isOn() && state != REACTOR_BROKEN && state != REACTOR_OFF)
+            if(isOn && state != REACTOR_BROKEN)
                 energyConsumer.setPowered(true);
         }
     }
@@ -226,5 +191,35 @@ public class Reactor extends AbstractActor implements Switchable, Repairable {
             setAnimation(animation);
             state = REACTOR_OFF;
             if(this.energyConsumer != null) energyConsumer.setPowered(false);
+
+
+
+                    if (roundedTemp % 1 != 0) {
+            roundedTemp -= roundedTemp % 1;
+            roundedTemp++;
+        }
+
+
+
+                if (temp > 0) {
+            newDamage = (int) (temp - temp % 1);
+        }
+
+
+                float coefficient = 1f;
+
+        if (damage >= 33 && damage <= 66) {
+            coefficient = 1.5f;
+        }
+        if (damage > 66) {
+            coefficient = 2f;
+        }
+
+
+        if (newDamage > 100 || newTemperature > 6000 || increment > 6000) {
+            damage = 100;
+        } else {
+            damage = (int) newDamage;
+        }
         }*/
 
