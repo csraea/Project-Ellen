@@ -11,9 +11,11 @@ import sk.tuke.kpi.gamelib.framework.actions.Loop;
 public class DefectiveLight extends Light implements Repairable {
 
     private Disposable defect;
+    private boolean isRepaired;
 
     public DefectiveLight() {
         super();
+        isRepaired = false;
     }
 
     public void setLightDefect() {
@@ -23,15 +25,21 @@ public class DefectiveLight extends Light implements Repairable {
         }
     }
 
+    private void changeState(){
+        this.isRepaired = false;
+    }
+
     @Override
     public boolean repair(){
-        if(super.isOn()) {
+        if(isRepaired) {
             return false;
         } else {
             defect.dispose();
+            isRepaired = true;
             new ActionSequence<>(
                 new Wait<>(10),
-                new Invoke<>(this::setDefect)
+                new Invoke<>(this::setDefect),
+                new Invoke<>(this::changeState)
             ).scheduleFor(this);
             return true;
         }
