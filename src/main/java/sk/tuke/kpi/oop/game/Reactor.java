@@ -98,6 +98,7 @@ public class Reactor extends AbstractActor implements Switchable, Repairable {
                 setAnimation(A_reactorHot);
             } else {
                 setAnimation(A_reactorBroken);
+                state = REACTOR_BROKEN;
                 isOn = false;
             }
         }
