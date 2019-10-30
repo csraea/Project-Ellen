@@ -55,7 +55,7 @@ public class Reactor extends AbstractActor implements Switchable, Repairable {
     public void increaseTemperature(int increment) {
 
         if (increment <= 0 || !isOn() || getDamage() >= 100)    return;
-        
+
         float coefficient = 1f;
 
         if (getDamage() >= 33 && getDamage() <= 66) {
