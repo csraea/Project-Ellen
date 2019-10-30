@@ -26,7 +26,7 @@ public class TimeBomb extends AbstractActor {
             new ActionSequence<>(
                 new Wait<>(deltaTime),
                 new Invoke<>(this::explode),
-                new Wait<>(0.501f),
+                new Wait<>(0.46f),
                 new Invoke<>(this::disappear)
             ).scheduleFor(this);
         }
