@@ -56,7 +56,7 @@ public class Reactor extends AbstractActor implements Switchable, Repairable {
         int currentTemperature = getTemperature();
         int currentDamage = getDamage();
 
-        if (currentDamage == 100 || currentTemperature == 6000) {
+        if (currentDamage == 100/* || currentTemperature == 6000*/) {
             return;
         }
 
@@ -82,11 +82,7 @@ public class Reactor extends AbstractActor implements Switchable, Repairable {
         }
         int newTemperature = (int) (currentTemperature + roundedTemp);
 
-        if (newDamage > 100) {
-            damage = 100;
-            temperature = 6000;
-        } else if (newTemperature > 6000) {
-            temperature = 6000;
+        if (newDamage > 100 || newTemperature > 6000) {
             damage = 100;
         } else {
             temperature = newTemperature;
@@ -168,7 +164,7 @@ public class Reactor extends AbstractActor implements Switchable, Repairable {
         if(damage > 0 && damage < 100) {
             damage -= 50;
             setDamage((damage >= 0) ? damage : 0);
-            //  place here a function to decrease temperature according to the level of damage
+            decreaseTemperature(2000);
             updateAnimation();
             return true;
         }
