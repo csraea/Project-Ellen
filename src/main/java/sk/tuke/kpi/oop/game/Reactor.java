@@ -144,7 +144,7 @@ public class Reactor extends AbstractActor implements Switchable, Repairable {
         if(this.state != REACTOR_BROKEN && isOn) {
             this.isOn = false;
             if(this.energyConsumer != null) energyConsumer.setPowered(false);
-            updateAnimation();
+            setAnimation(A_reactorOff);
         }
     }
 
