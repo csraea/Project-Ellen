@@ -12,11 +12,17 @@ public class Reactor extends AbstractActor implements Switchable, Repairable {
     private static final int REACTOR_ON = 1;
     private static final int REACTOR_HOT = 2;
     private static final int REACTOR_BROKEN = 3;
+    private static final int REACTOR_EXTINGUISHED = 4;
+
+    private final Animation A_reactorOn = new Animation("sprites/reactor_on.png", 80, 80, 0.1f, Animation.PlayMode.LOOP_PINGPONG);
+    private final Animation A_reactorOff = new Animation("sprites/reactor.png", 80, 80, 0.1f, Animation.PlayMode.LOOP_PINGPONG);
+    private final Animation A_reactorHot = new Animation("sprites/reactor_hot.png", 80, 80, 0.06f, Animation.PlayMode.LOOP_PINGPONG);
+    private final Animation A_reactorBroken = new Animation("sprites/reactor_broken.png", 80, 80, 0.1f, Animation.PlayMode.LOOP_PINGPONG);
+    private final Animation A_reactorExtinguished = new Animation("sprites/reactor_extinguished.png", 80, 80, 0.1f, Animation.PlayMode.LOOP_PINGPONG);
 
     private int state;
     private int temperature;
     private int damage;
-    private Animation animation;
     private boolean isOn;
 
     private EnergyConsumer energyConsumer;
@@ -26,8 +32,7 @@ public class Reactor extends AbstractActor implements Switchable, Repairable {
         temperature = 0;
         isOn = false;
         damage = 0;
-        animation = new Animation("sprites/reactor.png", 80, 80, 0.1f, Animation.PlayMode.LOOP_PINGPONG);
-        setAnimation(animation);
+        setAnimation(A_reactorOff);
         energyConsumer = null;
     }
 
@@ -49,22 +54,13 @@ public class Reactor extends AbstractActor implements Switchable, Repairable {
 
     public void increaseTemperature(int increment) {
 
-        if (increment <= 0 || !isOn()) {
-            return;
-        }
+        if (increment <= 0 || !isOn() || getDamage() >= 100)    return;
+        
+        float coefficient = 1f;
 
-        int currentTemperature = getTemperature();
-        int currentDamage = getDamage();
-
-        if (currentDamage == 100/* || currentTemperature == 6000*/) {
-            return;
-        }
-
-        float coefficient = 1;
-
-        if (currentDamage >= 33 && currentDamage <= 66) {
+        if (getDamage() >= 33 && getDamage() <= 66) {
             coefficient = 1.5f;
-        } else if (currentDamage > 66) {
+        } else if (getDamage() > 66) {
             coefficient = 2f;
         }
 
@@ -75,12 +71,12 @@ public class Reactor extends AbstractActor implements Switchable, Repairable {
             roundedTemp++;
         }
 
-        double temp = (currentTemperature + roundedTemp - 2000) / 40;
-        int newDamage = currentDamage;
+        double temp = (getTemperature() + roundedTemp - 2000) / 40;
+        int newDamage = getDamage();
         if (temp > 0) {
             newDamage = (int) (temp - temp % 1);
         }
-        int newTemperature = (int) (currentTemperature + roundedTemp);
+        int newTemperature = (int) (getTemperature() + roundedTemp);
 
         if (newDamage > 100 || newTemperature > 6000) {
             damage = 100;
@@ -101,16 +97,11 @@ public class Reactor extends AbstractActor implements Switchable, Repairable {
         if(getTemperature() != 0) {
 
             int realDecrement = decrement;
-            if(getDamage() >= 50){
-                realDecrement *= 0.5;
-            } else if(damage == 100) {
-                realDecrement = 0;
-            }
+            if(getDamage() >= 50)   realDecrement *= 0.5;
+            else if(damage == 100)  realDecrement = 0;
 
             temperature -= realDecrement;
-            if(getTemperature() < 0){
-                temperature = 0;
-            }
+            if(temperature < 0) temperature = 0;
 
             updateAnimation();
 
@@ -120,42 +111,32 @@ public class Reactor extends AbstractActor implements Switchable, Repairable {
     private void updateAnimation() {
         int currentTemp = getTemperature();
         int currentDamage = getDamage();
-        float frameDuration = 0.1f;
 
-        if(isOn()) {
-            if(currentDamage >= 90 && currentDamage < 100) {
-                 frameDuration = 0.05f;
-            } else if(currentDamage >= 80) {
-                frameDuration = 0.07f;
-            } else if(currentDamage >= 70) {
-                frameDuration = 0.08f;
-            } else if(currentDamage >= 50) {
-                frameDuration = 0.09f;
-            }
+        if(currentDamage < 100 && currentTemp < 4000 && isOn() && state != REACTOR_ON) {
+            state = REACTOR_ON;
+            setAnimation(A_reactorOn);
+            return;
         }
 
-        if (currentDamage == 100 && state != REACTOR_BROKEN && isOn()) {
+        if(currentTemp >= 4000 && isOn() && state != REACTOR_HOT) {
+            state = REACTOR_HOT;
+            setAnimation(A_reactorHot);
+            return;
+        }
+
+        if(currentDamage == 100 && state != REACTOR_BROKEN && isOn()) {
             state = REACTOR_BROKEN;
             this.isOn = false;
             if(energyConsumer != null) energyConsumer.setPowered(false);
-            animation = new Animation("sprites/reactor_broken.png", 80, 80, 0.17f, Animation.PlayMode.LOOP_PINGPONG);
-            setAnimation(animation);
-        } else if (currentTemp >= 4000 && state != REACTOR_HOT && isOn()) {
-            state = REACTOR_HOT;
-            this.animation  = new Animation("sprites/reactor_hot.png", 80, 80, frameDuration, Animation.PlayMode.LOOP_PINGPONG);
-            setAnimation(animation);
-            if(this.energyConsumer != null) energyConsumer.setPowered(true);
-        } else if (currentTemp < 4000 && state != REACTOR_ON && isOn()) {
-            state = REACTOR_ON;
-            animation  = new Animation("sprites/reactor_on.png", 80, 80, frameDuration, Animation.PlayMode.LOOP_PINGPONG);
-            setAnimation(animation);
-            if(this.energyConsumer != null) energyConsumer.setPowered(true);
-        } else if (!isOn() && state != REACTOR_BROKEN) {
-            animation = new Animation("sprites/reactor.png", 80, 80, frameDuration, Animation.PlayMode.LOOP_PINGPONG);
-            setAnimation(animation);
-            state = REACTOR_OFF;
-            if(this.energyConsumer != null) energyConsumer.setPowered(false);
+            setAnimation(A_reactorBroken);
+            return;
         }
+
+        if(!isOn() && state != REACTOR_BROKEN && state != REACTOR_EXTINGUISHED) {
+            state = REACTOR_OFF;
+            setAnimation(A_reactorOff);
+        }
+
     }
 
     @Override
@@ -174,8 +155,9 @@ public class Reactor extends AbstractActor implements Switchable, Repairable {
     public boolean extinguish() {
         if( state == REACTOR_BROKEN ) {
             decreaseTemperature(4000); //??? or change the temperature directly?
-            animation = new Animation("sprites/reactor_extinguished.png", 80, 80, 0.1f, Animation.PlayMode.LOOP_PINGPONG);
-            setAnimation(animation);
+            if(isOn()) isOn = false;
+            state = REACTOR_EXTINGUISHED;
+            setAnimation(A_reactorExtinguished);
             return true;
         }
         return false;
@@ -196,7 +178,6 @@ public class Reactor extends AbstractActor implements Switchable, Repairable {
     public void turnOff() {
         if(this.state != REACTOR_BROKEN && this.state != REACTOR_OFF) {
             this.isOn = false;
-            this.state = REACTOR_OFF;
             if(this.energyConsumer != null) energyConsumer.setPowered(false);
             updateAnimation();
         }
@@ -221,4 +202,29 @@ public class Reactor extends AbstractActor implements Switchable, Repairable {
         new PerpetualReactorHeating(1).scheduleFor(this);
     }
 }
+
+
+
+
+        /*if (currentDamage == 100 && state != REACTOR_BROKEN && isOn()) {
+            state = REACTOR_BROKEN;
+            this.isOn = false;
+            if(energyConsumer != null) energyConsumer.setPowered(false);
+            setAnimation(animation);
+        } else if (currentTemp >= 4000 && state != REACTOR_HOT && isOn()) {
+            state = REACTOR_HOT;
+            this.animation  = new Animation("sprites/reactor_hot.png", 80, 80, frameDuration, Animation.PlayMode.LOOP_PINGPONG);
+            setAnimation(animation);
+            if(this.energyConsumer != null) energyConsumer.setPowered(true);
+        } else if (currentTemp < 4000 && state != REACTOR_ON && isOn()) {
+            state = REACTOR_ON;
+            animation  = new Animation("sprites/reactor_on.png", 80, 80, frameDuration, Animation.PlayMode.LOOP_PINGPONG);
+            setAnimation(animation);
+            if(this.energyConsumer != null) energyConsumer.setPowered(true);
+        } else if (!isOn() && state != REACTOR_BROKEN) {
+            animation = new Animation("sprites/reactor.png", 80, 80, frameDuration, Animation.PlayMode.LOOP_PINGPONG);
+            setAnimation(animation);
+            state = REACTOR_OFF;
+            if(this.energyConsumer != null) energyConsumer.setPowered(false);
+        }*/
 
