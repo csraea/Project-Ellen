@@ -24,9 +24,9 @@ public class TimeBomb extends AbstractActor {
             setAnimation(A_bombActivated);
             this.isActivated = true;
             new ActionSequence<>(
-                new Wait<>(10),
-                new Invoke<>(this::EXPLODE),
-                new Wait<>(0.675f),
+                new Wait<>(deltaTime),
+                new Invoke<>(this::explode),
+                new Wait<>(0.501f),
                 new Invoke<>(this::disappear)
             ).scheduleFor(this);
         }
@@ -41,7 +41,7 @@ public class TimeBomb extends AbstractActor {
         return true;
     }
 
-    private void EXPLODE(){
+    private void explode(){
         Animation A_explosion = new Animation("sprites/small_explosion.png", 16, 16, 0.0575f, Animation.PlayMode.ONCE);
         setAnimation(A_explosion);
     }

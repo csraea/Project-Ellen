@@ -52,12 +52,12 @@ public class Reactor extends AbstractActor implements Switchable, Repairable {
 
     public void increaseTemperature(int increment) {
 
-        if (increment <= 0 || !isOn || temperature > 6000)    return;
+        if (increment <= 0 || !isOn)  return;
 
         float coefficient = ((damage >= 33 && damage <= 66) ? 1.5f : ((damage > 66) ? 2f : 1f));
 
         double newIncrement = increment * coefficient;
-        newIncrement = (newIncrement % 1 != 0) ? newIncrement - newIncrement % 1 + 1 : newIncrement;
+        newIncrement = Math.ceil(newIncrement);         //(newIncrement % 1 != 0) ? newIncrement - newIncrement % 1 + 1 : newIncrement;
 
         double newDamage = ((float)(temperature + newIncrement) - 2000f) / 40f;
         newDamage = (newDamage > 0) ? (int) (newDamage - newDamage % 1) : damage;
@@ -107,20 +107,18 @@ public class Reactor extends AbstractActor implements Switchable, Repairable {
     @Override
     public boolean repair() {
         int damage = getDamage();
-        if(damage > 0 && damage < 100) {
-            damage -= 50;
-            setDamage((damage >= 0) ? damage : 0);
-            temperature -= 2000;
-            temperature = (temperature < 0) ? 0 : temperature;
-            updateAnimation();
-            return true;
-        }
-        return false;
+        if(damage <= 0 || damage >= 100) return false;
+        temperature -= 2000;
+        temperature = (temperature < 0) ? 0 : temperature;
+        damage -= 50;
+        setDamage((damage >= 0) ? damage : 0);
+        updateAnimation();
+        return true;
     }
 
     public boolean extinguish() {
-        if( state == REACTOR_BROKEN ) {
-            decreaseTemperature(4000); //??? or change the temperature directly?
+        if(state == REACTOR_BROKEN) {
+            decreaseTemperature(4000);
             if(isOn()) isOn = false;
             state = REACTOR_EXTINGUISHED;
             setAnimation(A_reactorExtinguished);
@@ -169,58 +167,4 @@ public class Reactor extends AbstractActor implements Switchable, Repairable {
     }
 }
 
-
-
-
-        /*if (currentDamage == 100 && state != REACTOR_BROKEN && isOn()) {
-            state = REACTOR_BROKEN;
-            this.isOn = false;
-            if(energyConsumer != null) energyConsumer.setPowered(false);
-            setAnimation(animation);
-        } else if (currentTemp >= 4000 && state != REACTOR_HOT && isOn()) {
-            state = REACTOR_HOT;
-            this.animation  = new Animation("sprites/reactor_hot.png", 80, 80, frameDuration, Animation.PlayMode.LOOP_PINGPONG);
-            setAnimation(animation);
-            if(this.energyConsumer != null) energyConsumer.setPowered(true);
-        } else if (currentTemp < 4000 && state != REACTOR_ON && isOn()) {
-            state = REACTOR_ON;
-            animation  = new Animation("sprites/reactor_on.png", 80, 80, frameDuration, Animation.PlayMode.LOOP_PINGPONG);
-            setAnimation(animation);
-            if(this.energyConsumer != null) energyConsumer.setPowered(true);
-        } else if (!isOn() && state != REACTOR_BROKEN) {
-            animation = new Animation("sprites/reactor.png", 80, 80, frameDuration, Animation.PlayMode.LOOP_PINGPONG);
-            setAnimation(animation);
-            state = REACTOR_OFF;
-            if(this.energyConsumer != null) energyConsumer.setPowered(false);
-
-
-
-                    if (roundedTemp % 1 != 0) {
-            roundedTemp -= roundedTemp % 1;
-            roundedTemp++;
-        }
-
-
-
-                if (temp > 0) {
-            newDamage = (int) (temp - temp % 1);
-        }
-
-
-                float coefficient = 1f;
-
-        if (damage >= 33 && damage <= 66) {
-            coefficient = 1.5f;
-        }
-        if (damage > 66) {
-            coefficient = 2f;
-        }
-
-
-        if (newDamage > 100 || newTemperature > 6000 || increment > 6000) {
-            damage = 100;
-        } else {
-            damage = (int) newDamage;
-        }
-        }*/
 
