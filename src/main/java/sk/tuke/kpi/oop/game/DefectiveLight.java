@@ -43,7 +43,6 @@ public class DefectiveLight extends Light implements Repairable {
             ).scheduleFor(this);
             return true;
         }
-
     }
 
     private void setDefect() {
