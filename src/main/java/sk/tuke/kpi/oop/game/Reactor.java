@@ -118,7 +118,7 @@ public class Reactor extends AbstractActor implements Switchable, Repairable {
     public boolean extinguish() {
         if(state == REACTOR_BROKEN) {
             decreaseTemperature(4000);
-            if(isOn()) isOn = false;
+            if(isOn) isOn = false;
             state = REACTOR_EXTINGUISHED;
             setAnimation(A_reactorExtinguished);
             return true;
