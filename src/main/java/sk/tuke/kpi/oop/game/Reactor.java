@@ -9,8 +9,8 @@ import sk.tuke.kpi.oop.game.actions.PerpetualReactorHeating;
 public class Reactor extends AbstractActor implements Switchable, Repairable {
 
     private static final int REACTOR_OFF = 0;
-    private static final int REACTOR_BROKEN = 3;
-    private static final int REACTOR_EXTINGUISHED = 4;
+    private static final int REACTOR_BROKEN = 1;
+    private static final int REACTOR_EXTINGUISHED = 2;
 
     private final Animation A_reactorOn = new Animation("sprites/reactor_on.png", 80, 80, 0.1f, Animation.PlayMode.LOOP_PINGPONG);
     private final Animation A_reactorOff = new Animation("sprites/reactor.png", 80, 80, 0.1f, Animation.PlayMode.LOOP_PINGPONG);
@@ -57,7 +57,7 @@ public class Reactor extends AbstractActor implements Switchable, Repairable {
         float coefficient = ((damage >= 33 && damage <= 66) ? 1.5f : ((damage > 66) ? 2f : 1f));
 
         double newIncrement = increment * coefficient;
-        newIncrement = Math.ceil(newIncrement);         //(newIncrement % 1 != 0) ? newIncrement - newIncrement % 1 + 1 : newIncrement;
+        newIncrement = Math.ceil(newIncrement);
 
         double newDamage = ((float)(temperature + newIncrement) - 2000f) / 40f;
         newDamage = (newDamage > 0) ? (int) (newDamage - newDamage % 1) : damage;
