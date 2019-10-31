@@ -32,7 +32,8 @@ public class Teleport extends AbstractActor {
     }
 
     public void setDestination(Teleport teleport) {
-        if(this.equals(teleport)) destinationTeleport = null;
+        if(this.equals(teleport) && destinationTeleport == null) return;
+        else if(this.equals(teleport) && destinationTeleport != null) return;
         else destinationTeleport = teleport;
     }
 
