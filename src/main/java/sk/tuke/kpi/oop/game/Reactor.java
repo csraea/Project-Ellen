@@ -51,7 +51,6 @@ public class Reactor extends AbstractActor implements Switchable, Repairable {
     }
 
     public void increaseTemperature(int increment) {
-
         if (increment <= 0 || !isOn)  return;
 
         float coefficient = ((damage >= 33 && damage <= 66) ? 1.5f : ((damage > 66) ? 2f : 1f));
@@ -71,7 +70,6 @@ public class Reactor extends AbstractActor implements Switchable, Repairable {
     }
 
     public void decreaseTemperature(int decrement) {
-
         if(decrement <= 0 || !isOn()) {
             return;
         }
@@ -86,7 +84,6 @@ public class Reactor extends AbstractActor implements Switchable, Repairable {
             if(temperature < 0) temperature = 0;
 
             updateAnimation();
-
         }
     }
 
