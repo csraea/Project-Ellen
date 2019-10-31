@@ -32,11 +32,10 @@ public class Teleport extends AbstractActor {
     }
 
     public void setDestination(Teleport teleport) {
-        if(destinationTeleport != this) destinationTeleport = teleport;
-        else destinationTeleport = null;
+        if(this.equals(teleport)) destinationTeleport = null;
     }
 
-    private void teleportPlayer(Player player) {
+    public void teleportPlayer(Player player) {
         if(player != null && destinationTeleport != null && teleportAccess) {
             player.setPosition(destinationTeleport.getPosX() + destinationTeleport.getWidth() / 2, destinationTeleport.getPosY() + destinationTeleport.getHeight() / 2);
 
