@@ -106,11 +106,10 @@ public class Reactor extends AbstractActor implements Switchable, Repairable {
 
     @Override
     public boolean repair() {
-        int damage = getDamage();
         if(damage > 0 && damage < 100) {
-            temperature = (int) Math.ceil((damage / 0.25f) + 2000);
             damage -= 50;
-            setDamage((damage >= 0) ? damage : 0);
+            damage = (damage >= 0) ? damage : 0;
+            temperature = (int) Math.ceil((damage / 0.25f) + 2000);
             updateAnimation();
             return true;
         }
