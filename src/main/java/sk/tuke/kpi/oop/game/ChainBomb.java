@@ -21,12 +21,12 @@ public class ChainBomb extends TimeBomb {
 
     @Override
     public void activate() {
-        if(!isActivated) {
+        if(!isActivated()) {
             Animation A_bombActivated = new Animation("sprites/bomb_activated.png", 16, 16, 0.1f, Animation.PlayMode.LOOP_PINGPONG);
             setAnimation(A_bombActivated);
-            this.isActivated = true;
+            setState(true);
             new ActionSequence<>(
-                new Wait<>(deltaTime),
+                new Wait<>(getDeltaTime()),
                 new Invoke<>(this::explode),
                 new Wait<>(0.46f),
                 new Invoke<>(this::magic),

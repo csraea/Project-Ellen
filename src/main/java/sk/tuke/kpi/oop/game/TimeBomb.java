@@ -8,8 +8,8 @@ import sk.tuke.kpi.gamelib.graphics.Animation;
 
 public class TimeBomb extends AbstractActor {
 
-    public float deltaTime;
-    public boolean isActivated;
+    private float deltaTime;
+    private boolean isActivated;
 
     public TimeBomb(float deltaTime) {
         this.deltaTime = deltaTime;
@@ -39,6 +39,14 @@ public class TimeBomb extends AbstractActor {
     public boolean disappear(){
         getScene().removeActor(this);
         return true;
+    }
+
+    public void setState(boolean state){
+        this.isActivated = state;
+    }
+
+    public float getDeltaTime() {
+        return deltaTime;
     }
 
     public void explode(){
