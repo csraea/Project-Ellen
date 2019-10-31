@@ -8,9 +8,9 @@ import sk.tuke.kpi.oop.game.actions.PerpetualReactorHeating;
 
 public class Reactor extends AbstractActor implements Switchable, Repairable {
 
-    private static final int REACTOR_OFF = 0;
-    private static final int REACTOR_BROKEN = 1;
-    private static final int REACTOR_EXTINGUISHED = 2;
+    private static final byte REACTOR_OFF = 0;
+    private static final byte REACTOR_BROKEN = 1;
+    private static final byte REACTOR_EXTINGUISHED = 2;
 
     private final Animation A_reactorOn = new Animation("sprites/reactor_on.png", 80, 80, 0.1f, Animation.PlayMode.LOOP_PINGPONG);
     private final Animation A_reactorOff = new Animation("sprites/reactor.png", 80, 80, 0.1f, Animation.PlayMode.LOOP_PINGPONG);
@@ -18,7 +18,7 @@ public class Reactor extends AbstractActor implements Switchable, Repairable {
     private final Animation A_reactorBroken = new Animation("sprites/reactor_broken.png", 80, 80, 0.1f, Animation.PlayMode.LOOP_PINGPONG);
     private final Animation A_reactorExtinguished = new Animation("sprites/reactor_extinguished.png", 80, 80, 0.1f, Animation.PlayMode.LOOP_PINGPONG);
 
-    private int state;
+    private byte state;
     private int temperature;
     private int damage;
     private boolean isOn;
