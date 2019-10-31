@@ -1,7 +1,6 @@
 package sk.tuke.kpi.oop.game;
 
 import sk.tuke.kpi.gamelib.Actor;
-import sk.tuke.kpi.gamelib.Scene;
 import sk.tuke.kpi.gamelib.actions.ActionSequence;
 import sk.tuke.kpi.gamelib.actions.Invoke;
 import sk.tuke.kpi.gamelib.actions.Wait;
@@ -17,6 +16,7 @@ public class ChainBomb extends TimeBomb {
 
     public ChainBomb(float deltaTime) {
         super(deltaTime);
+        l = getScene().getActors();
     }
 
     @Override
@@ -35,11 +35,7 @@ public class ChainBomb extends TimeBomb {
         }
     }
     private void magic() {
-        Scene scene = getScene();
-        l = scene.getActors();
-
         Ellipse2D.Float bombR = new Ellipse2D.Float(getPosX(), getPosY() + getHeight(), 50, 50);
-
         for (Actor b : l) {
             if (b instanceof ChainBomb) {
                 Rectangle2D bomb = new Rectangle2D.Float(b.getPosX(), b.getPosY() + b.getHeight(), b.getWidth(), b.getHeight());
