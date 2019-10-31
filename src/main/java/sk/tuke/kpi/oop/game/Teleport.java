@@ -57,7 +57,7 @@ public class Teleport extends AbstractActor {
         return (Player) getScene().getFirstActorByName("Player");
     }
 
-    public boolean isOutside() {
+    private boolean isOutside() {
         Actor player = getPlayer();
         if(player != null) return !this.intersects(player);
         return false;
