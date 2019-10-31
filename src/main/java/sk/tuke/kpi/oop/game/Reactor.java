@@ -6,6 +6,9 @@ import sk.tuke.kpi.gamelib.framework.AbstractActor;
 import sk.tuke.kpi.gamelib.graphics.Animation;
 import sk.tuke.kpi.oop.game.actions.PerpetualReactorHeating;
 
+import java.util.HashSet;
+import java.util.Set;
+
 public class Reactor extends AbstractActor implements Switchable, Repairable {
 
     private static final byte REACTOR_OFF = 0;
@@ -23,7 +26,7 @@ public class Reactor extends AbstractActor implements Switchable, Repairable {
     private int damage;
     private boolean isOn;
 
-    private EnergyConsumer energyConsumer;
+    private Set<EnergyConsumer> devices;
 
     public Reactor() {
         state = REACTOR_OFF;
@@ -31,7 +34,7 @@ public class Reactor extends AbstractActor implements Switchable, Repairable {
         isOn = false;
         damage = 0;
         setAnimation(A_reactorOff);
-        energyConsumer = null;
+        devices = new HashSet<>();
     }
 
     public int getState() {
@@ -97,6 +100,9 @@ public class Reactor extends AbstractActor implements Switchable, Repairable {
                 setAnimation(A_reactorBroken);
                 state = REACTOR_BROKEN;
                 isOn = false;
+                for (EnergyConsumer e : devices) {
+                    e.setPowered(false);
+                }
             }
         }
     }
@@ -130,7 +136,9 @@ public class Reactor extends AbstractActor implements Switchable, Repairable {
     public void turnOn() {
         if(state != REACTOR_BROKEN && !isOn) {
             this.isOn = true;
-            if(this.energyConsumer != null) energyConsumer.setPowered(true);
+            for(EnergyConsumer e : devices) {
+                e.setPowered(true);
+            }
             updateAnimation();
         }
     }
@@ -138,22 +146,29 @@ public class Reactor extends AbstractActor implements Switchable, Repairable {
     public void turnOff() {
         if(this.state != REACTOR_BROKEN && isOn) {
             this.isOn = false;
-            if(this.energyConsumer != null) energyConsumer.setPowered(false);
+            for (EnergyConsumer e : devices) {
+                e.setPowered(false);
+            }
             setAnimation(A_reactorOff);
         }
     }
 
     public void addDevice(EnergyConsumer energyConsumer) {
         if(isOn()) {
-            this.energyConsumer = energyConsumer;
-            if(isOn && state != REACTOR_BROKEN)
-                energyConsumer.setPowered(true);
+            if(energyConsumer != null) devices.add(energyConsumer);
+            if(isOn && state != REACTOR_BROKEN) {
+                for (EnergyConsumer e : devices) {
+                    e.setPowered(true);
+                }
+            }
         }
     }
 
     public void removeDevice(EnergyConsumer energyConsumer) {
-        energyConsumer.setPowered(false);
-        this.energyConsumer = null;
+        if(energyConsumer != null) {
+            devices.remove(energyConsumer);
+            energyConsumer.setPowered(false);
+        }
     }
 
     @Override
