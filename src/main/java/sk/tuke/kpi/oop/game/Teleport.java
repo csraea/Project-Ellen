@@ -22,6 +22,7 @@ public class Teleport extends AbstractActor {
     public Teleport(Teleport teleport) {
         Animation animation = new Animation("sprites/lift.png", 48, 48);
         setAnimation(animation);
+        destinationTeleport = null;
         setDestination(teleport);
         teleportAccess = false;
         wasOutside = false;
