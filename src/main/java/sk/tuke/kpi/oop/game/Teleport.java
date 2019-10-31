@@ -22,7 +22,7 @@ public class Teleport extends AbstractActor {
     public Teleport(Teleport teleport) {
         Animation animation = new Animation("sprites/lift.png", 48, 48);
         setAnimation(animation);
-        destinationTeleport = (teleport == this) ? null : teleport;
+        setDestination(teleport);
         teleportAccess = false;
         wasOutside = false;
     }
@@ -33,6 +33,7 @@ public class Teleport extends AbstractActor {
 
     public void setDestination(Teleport teleport) {
         if(this.equals(teleport)) destinationTeleport = null;
+        else destinationTeleport = teleport;
     }
 
     public void teleportPlayer(Player player) {
