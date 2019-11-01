@@ -12,11 +12,8 @@ import java.util.List;
 
 public class ChainBomb extends TimeBomb {
 
-    private List<Actor> l;
-
     public ChainBomb(float deltaTime) {
         super(deltaTime);
-        l = getScene().getActors();
     }
 
     @Override
@@ -36,6 +33,7 @@ public class ChainBomb extends TimeBomb {
     }
     private void magic() {
         Ellipse2D.Float bombR = new Ellipse2D.Float(getPosX(), getPosY() + getHeight(), 50, 50);
+        List<Actor> l = getScene().getActors();
         for (Actor b : l) {
             if (b instanceof ChainBomb) {
                 Rectangle2D bomb = new Rectangle2D.Float(b.getPosX(), b.getPosY() + b.getHeight(), b.getWidth(), b.getHeight());
