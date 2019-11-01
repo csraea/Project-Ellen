@@ -32,7 +32,7 @@ public class ChainBomb extends TimeBomb {
         }
     }
     private void magic() {
-        Ellipse2D.Float bombR = new Ellipse2D.Float(getPosX(), getPosY() + getHeight(), 50, 50);
+        Ellipse2D.Float bombR = new Ellipse2D.Float(getPosX() - 50, getPosY() + 50, 100, 100);
         List<Actor> l = getScene().getActors();
         for (Actor b : l) {
             if (b instanceof ChainBomb) {
