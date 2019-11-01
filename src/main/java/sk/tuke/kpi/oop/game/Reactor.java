@@ -69,6 +69,7 @@ public class Reactor extends AbstractActor implements Switchable, Repairable {
         damage = (newDamage > 100 || newTemperature > 6000) ? 100 : (int) newDamage;
         temperature = newTemperature;
 
+        updateDevicesPowering();
         updateAnimation();
     }
 
@@ -156,8 +157,7 @@ public class Reactor extends AbstractActor implements Switchable, Repairable {
     public void addDevice(EnergyConsumer energyConsumer) {
         if(isOn()) {
             if(energyConsumer != null) devices.add(energyConsumer);
-            if(isOn && state != REACTOR_BROKEN) energyConsumer.setPowered(true);
-            }
+            if(isOn && state != REACTOR_BROKEN && energyConsumer != null) energyConsumer.setPowered(true);
         }
     }
 
@@ -173,6 +173,16 @@ public class Reactor extends AbstractActor implements Switchable, Repairable {
         super.addedToScene(scene);
         new PerpetualReactorHeating(1).scheduleFor(this);
     }
+
+    private void updateDevicesPowering() {
+        if(temperature >= 6000) {
+            for (EnergyConsumer e : devices) {
+                e.setPowered(false);
+            }
+        }
+    }
 }
+
+
 
 
