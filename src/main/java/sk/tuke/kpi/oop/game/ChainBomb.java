@@ -38,7 +38,7 @@ public class ChainBomb extends TimeBomb {
         List<Actor> l = getScene().getActors();
         for (Actor b : l) {
             if (b instanceof ChainBomb) {
-                Rectangle2D bomb = new Rectangle2D.Float(b.getPosX() + (float)(b.getWidth())/2 - 50 - (float)b.getWidth()/2, (b.getPosY() + b.getHeight())/2 +, b.getWidth(), b.getHeight());
+                Rectangle2D bomb = new Rectangle2D.Float(b.getPosX(), b.getPosY() + b.getHeight() , b.getWidth(), b.getHeight());
                 if (bombR.intersects(bomb)) {
                     ((ChainBomb) b).activate();
                 }
