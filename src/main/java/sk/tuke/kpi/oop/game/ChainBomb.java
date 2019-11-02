@@ -35,7 +35,7 @@ public class ChainBomb extends TimeBomb {
         List<Actor> l = getScene().getActors();
         if(l.isEmpty()) return;
 
-        Ellipse2D.Float bombRadius = new Ellipse2D.Float((float)getPosX() + ((float)(getWidth()))/2 - 42.5f, (float)getPosY() + ((float)(getHeight()))/2f - 42.5f, 95f, 95f);
+        Ellipse2D.Float bombRadius = new Ellipse2D.Float((float)getPosX() + ((float)(getWidth()))/2 - 45f, (float)getPosY() + ((float)(getHeight()))/2f - 45f, 90f, 90f);
 
         for (Actor b : l) {
             if (b instanceof ChainBomb) {
