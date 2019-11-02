@@ -32,17 +32,14 @@ public class ChainBomb extends TimeBomb {
         }
     }
     private void magic() {
-        float qX = getPosX() + ((float)getWidth())/2;
-        float qY = getPosY() + ((float)getHeight())/2;
-        Ellipse2D.Float bombR = new Ellipse2D.Float(qX - 50, qY + 50, 100, 100);
+        Ellipse2D.Float bombRadius = new Ellipse2D.Float(getPosX() + ((float)getWidth())/2 - 50, getPosY() + ((float)getHeight())/2 + 50, 100, 100);
         List<Actor> l = getScene().getActors();
-        if(l != null) {
-            for (Actor b : l) {
-                if (b instanceof ChainBomb) {
-                    Rectangle2D bomb = new Rectangle2D.Float(b.getPosX(), b.getPosY() + b.getHeight(), b.getWidth(), b.getHeight());
-                    if (bombR.intersects(bomb)) {
-                        ((ChainBomb) b).activate();
-                    }
+        if(l == null) return;
+        for (Actor b : l) {
+            if (b instanceof ChainBomb) {
+                Rectangle2D bomb = new Rectangle2D.Float(b.getPosX(), b.getPosY() + b.getHeight(), b.getWidth(), b.getHeight());
+                if (bombRadius.intersects(bomb)) {
+                    ((ChainBomb) b).activate();
                 }
             }
         }
