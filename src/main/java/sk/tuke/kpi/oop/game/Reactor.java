@@ -101,8 +101,10 @@ public class Reactor extends AbstractActor implements Switchable, Repairable {
                 setAnimation(A_reactorBroken);
                 state = REACTOR_BROKEN;
                 isOn = false;
-                for (EnergyConsumer e : devices) {
-                    e.setPowered(false);
+                if(devices != null && !devices.isEmpty()) {
+                    for (EnergyConsumer e : devices) {
+                        e.setPowered(false);
+                    }
                 }
             }
         }
@@ -135,23 +137,25 @@ public class Reactor extends AbstractActor implements Switchable, Repairable {
     }
 
     public void turnOn() {
-        if(state != REACTOR_BROKEN && !isOn) {
-            this.isOn = true;
-            for(EnergyConsumer e : devices) {
-                e.setPowered(true);
+        if(state == REACTOR_BROKEN || isOn) return;
+        this.isOn = true;
+        if(devices != null && !devices.isEmpty()) {
+            for (EnergyConsumer e : devices) {
+                if(isOn()) e.setPowered(true);
             }
-            updateAnimation();
         }
+        updateAnimation();
     }
 
     public void turnOff() {
-        if(this.state != REACTOR_BROKEN && isOn) {
-            this.isOn = false;
+        if(this.state == REACTOR_BROKEN || !isOn) return;
+        this.isOn = false;
+        if(devices != null && !devices.isEmpty()) {
             for (EnergyConsumer e : devices) {
                 e.setPowered(false);
             }
-            setAnimation(A_reactorOff);
         }
+        setAnimation(A_reactorOff);
     }
 
     public void addDevice(EnergyConsumer energyConsumer) {
