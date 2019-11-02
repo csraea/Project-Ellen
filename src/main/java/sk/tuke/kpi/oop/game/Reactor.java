@@ -128,10 +128,12 @@ public class Reactor extends AbstractActor implements Switchable, Repairable {
         return false;
     }
 
+    @Override
     public boolean isOn() {
         return this.isOn;
     }
 
+    @Override
     public void turnOn() {
         if(state == REACTOR_BROKEN || isOn) return;
         this.isOn = true;
@@ -139,6 +141,7 @@ public class Reactor extends AbstractActor implements Switchable, Repairable {
         updateAnimation();
     }
 
+    @Override
     public void turnOff() {
         if(state == REACTOR_BROKEN || !isOn) return;
         this.isOn = false;
