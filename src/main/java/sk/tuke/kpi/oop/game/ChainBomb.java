@@ -24,9 +24,9 @@ public class ChainBomb extends TimeBomb {
             setState(true);
             new ActionSequence<>(
                 new Wait<>(getDeltaTime()),
+                new Invoke<>(this::magic),
                 new Invoke<>(this::explode),
                 new Wait<>(0.46f),
-                new Invoke<>(this::magic),
                 new Invoke<>(this::disappear)
             ).scheduleFor(this);
         }
