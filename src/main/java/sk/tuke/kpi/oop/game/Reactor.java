@@ -101,11 +101,7 @@ public class Reactor extends AbstractActor implements Switchable, Repairable {
                 setAnimation(A_reactorBroken);
                 state = REACTOR_BROKEN;
                 isOn = false;
-                if(devices != null && !devices.isEmpty()) {
-                    for (EnergyConsumer e : devices) {
-                        e.setPowered(false);
-                    }
-                }
+                updateDevicesPowering(false);
             }
         }
     }
@@ -139,22 +135,14 @@ public class Reactor extends AbstractActor implements Switchable, Repairable {
     public void turnOn() {
         if(state == REACTOR_BROKEN || isOn) return;
         this.isOn = true;
-        if(devices != null && !devices.isEmpty()) {
-            for (EnergyConsumer e : devices) {
-                if(isOn()) e.setPowered(true);
-            }
-        }
+        updateDevicesPowering(true);
         updateAnimation();
     }
 
     public void turnOff() {
-        if(this.state == REACTOR_BROKEN || !isOn) return;
+        if(state == REACTOR_BROKEN || !isOn) return;
         this.isOn = false;
-        if(devices != null && !devices.isEmpty()) {
-            for (EnergyConsumer e : devices) {
-                e.setPowered(false);
-            }
-        }
+        updateDevicesPowering(false);
         setAnimation(A_reactorOff);
     }
 
@@ -178,10 +166,16 @@ public class Reactor extends AbstractActor implements Switchable, Repairable {
         new PerpetualReactorHeating(1).scheduleFor(this);
     }
 
+
     private void updateDevicesPowering() {
-        if(temperature >= 6000) {
+        if(temperature >= 6000 || state == REACTOR_BROKEN || !isOn) updateDevicesPowering(false);
+        else updateDevicesPowering(true);
+    }
+
+    private void updateDevicesPowering(boolean state) {
+        if(devices != null && !devices.isEmpty()) {
             for (EnergyConsumer e : devices) {
-                e.setPowered(false);
+                e.setPowered(state);
             }
         }
     }

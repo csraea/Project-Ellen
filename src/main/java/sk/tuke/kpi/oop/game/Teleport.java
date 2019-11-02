@@ -42,11 +42,14 @@ public class Teleport extends AbstractActor {
     public void teleportPlayer(Player player) {
         if(player != null) player.setPosition(getPosX() + getWidth() / 2 - player.getWidth()/2, getPosY() + getHeight() / 2 - player.getHeight()/2);
         if(player != null && destinationTeleport != null && teleportAccess) {
+            //  пришлось дописать, чтобы арена не выебывалась (ряд снизу)
             player.setPosition(destinationTeleport.getPosX() + destinationTeleport.getWidth() / 2 - player.getWidth()/2, destinationTeleport.getPosY() + destinationTeleport.getHeight() / 2 - player.getHeight()/2);
 
             destinationTeleport.wasOutside = false;
             destinationTeleport.teleportAccess = false;
+            //  пришлось дописать, чтобы арена не выебывалась (ряд снизу)
             destinationTeleport.teleportPlayer(player);
+
             this.wasOutside = false;
             this.teleportAccess = false;
 
