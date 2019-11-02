@@ -54,14 +54,14 @@ public class Reactor extends AbstractActor implements Switchable, Repairable {
     }
 
     public void increaseTemperature(int increment) {
-        if (increment <= 0 || !isOn)  return;
+        if (increment <= 0 || !isOn) return;
 
         float coefficient = ((damage >= 33 && damage <= 66) ? 1.5f : ((damage > 66) ? 2f : 1f));
 
         double newIncrement = increment * coefficient;
         newIncrement = Math.ceil(newIncrement);
 
-        double newDamage = ((float)(temperature + newIncrement) - 2000f) / 40f;
+        double newDamage = ((float) (temperature + newIncrement) - 2000f) / 40f;
         newDamage = (newDamage > 0) ? (int) (newDamage - newDamage % 1) : damage;
 
         int newTemperature = (int) (temperature + newIncrement);
@@ -74,41 +74,44 @@ public class Reactor extends AbstractActor implements Switchable, Repairable {
     }
 
     public void decreaseTemperature(int decrement) {
-        if(decrement <= 0 || !isOn()) {
+        if (decrement <= 0 || !isOn()) {
             return;
         }
 
-        if(getTemperature() != 0) {
+        if (getTemperature() != 0) {
 
             int realDecrement = decrement;
-            if(getDamage() >= 50)   realDecrement *= 0.5;
-            else if(damage == 100)  realDecrement = 0;
+            if (getDamage() >= 50) realDecrement *= 0.5;
+            else if (damage == 100) realDecrement = 0;
 
             temperature -= realDecrement;
-            if(temperature < 0) temperature = 0;
+            if (temperature < 0) temperature = 0;
 
             updateAnimation();
         }
     }
 
     private void updateAnimation() {
-        if(isOn) {
-            if(temperature <= 4000) {
-                setAnimation(A_reactorOn);
-            } else if(temperature < 6000) {
-                setAnimation(A_reactorHot);
-            } else {
-                setAnimation(A_reactorBroken);
-                state = REACTOR_BROKEN;
-                isOn = false;
-                updateDevicesPowering(false);
+        if (!isOn) return;
+        if (temperature <= 4000) {
+            setAnimation(A_reactorOn);
+        } else if (temperature < 6000) {
+            setAnimation(A_reactorHot);
+        } else {
+            setAnimation(A_reactorBroken);
+            state = REACTOR_BROKEN;
+            isOn = false;
+            if(devices != null) {
+                for (EnergyConsumer e : devices) {
+                    e.setPowered(false);
+                }
             }
         }
     }
 
     @Override
     public boolean repair() {
-        if(damage > 0 && damage < 100) {
+        if (damage > 0 && damage < 100) {
             damage = ((damage - 50) < 0) ? 0 : damage - 50;
             temperature = (int) Math.ceil((damage / 0.025f) + 2000);
             updateAnimation();
@@ -118,9 +121,9 @@ public class Reactor extends AbstractActor implements Switchable, Repairable {
     }
 
     public boolean extinguish() {
-        if(state == REACTOR_BROKEN) {
+        if (state == REACTOR_BROKEN) {
             decreaseTemperature(4000);
-            if(isOn) isOn = false;
+            if (isOn) isOn = false;
             state = REACTOR_EXTINGUISHED;
             setAnimation(A_reactorExtinguished);
             return true;
@@ -135,29 +138,37 @@ public class Reactor extends AbstractActor implements Switchable, Repairable {
 
     @Override
     public void turnOn() {
-        if(state == REACTOR_BROKEN || isOn) return;
+        if (state == REACTOR_BROKEN) return;
         this.isOn = true;
-        updateDevicesPowering(true);
+        if(devices != null) {
+            for (EnergyConsumer e : devices) {
+                if(isOn()) e.setPowered(true);
+            }
+        }
         updateAnimation();
     }
 
     @Override
     public void turnOff() {
-        if(state == REACTOR_BROKEN || !isOn) return;
+        //if (state == REACTOR_BROKEN || !isOn) return;
         this.isOn = false;
-        updateDevicesPowering(false);
+        if(devices != null && !devices.isEmpty()) {
+            for (EnergyConsumer e : devices) {
+                e.setPowered(false);
+            }
+        }
         setAnimation(A_reactorOff);
     }
 
     public void addDevice(EnergyConsumer energyConsumer) {
-        if(isOn()) {
-            if(energyConsumer != null) devices.add(energyConsumer);
-            if(isOn && state != REACTOR_BROKEN && energyConsumer != null) energyConsumer.setPowered(true);
+        if (isOn) {
+            if (energyConsumer != null) devices.add(energyConsumer);
+            if (isOn && state != REACTOR_BROKEN && energyConsumer != null) energyConsumer.setPowered(true);
         }
     }
 
     public void removeDevice(EnergyConsumer energyConsumer) {
-        if(energyConsumer != null) {
+        if (energyConsumer != null) {
             devices.remove(energyConsumer);
             energyConsumer.setPowered(false);
         }
@@ -169,21 +180,13 @@ public class Reactor extends AbstractActor implements Switchable, Repairable {
         new PerpetualReactorHeating(1).scheduleFor(this);
     }
 
-
-    private void updateDevicesPowering() {
-        if(temperature >= 6000 || state == REACTOR_BROKEN || !isOn) updateDevicesPowering(false);
-        else updateDevicesPowering(true);
-    }
-
-    private void updateDevicesPowering(boolean state) {
-        if(devices != null && !devices.isEmpty()) {
+    public void updateDevicesPowering(){
+        if(temperature >= 6000 && devices != null) {
             for (EnergyConsumer e : devices) {
-                e.setPowered(state);
+                e.setPowered(false);
             }
         }
     }
 }
-
-
 
 
