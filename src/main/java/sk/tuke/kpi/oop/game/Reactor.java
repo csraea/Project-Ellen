@@ -137,27 +137,28 @@ public class Reactor extends AbstractActor implements Switchable, Repairable {
     }
 
     @Override
-    public void turnOn() {
-        if (state == REACTOR_BROKEN) return;
-        this.isOn = true;
-        if(devices != null) {
-            for (EnergyConsumer e : devices) {
-                if(isOn()) e.setPowered(true);
-            }
-        }
-        updateAnimation();
-    }
-
-    @Override
     public void turnOff() {
-        //if (state == REACTOR_BROKEN || !isOn) return;
-        this.isOn = false;
-        if(devices != null && !devices.isEmpty()) {
-            for (EnergyConsumer e : devices) {
+        if (state == REACTOR_BROKEN) return;
+        isOn = false;
+        if (devices != null) {
+            for (EnergyConsumer e : devices){
                 e.setPowered(false);
             }
         }
         setAnimation(A_reactorOff);
+    }
+
+    @Override
+    public void turnOn() {
+        isOn = true;
+        if (devices != null) {
+            for (EnergyConsumer e : devices){
+                if (isOn()) {
+                    e.setPowered(true);
+                }
+            }
+        }
+        updateAnimation();
     }
 
     public void addDevice(EnergyConsumer energyConsumer) {
