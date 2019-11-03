@@ -13,30 +13,39 @@ import java.util.Set;
 public class Reactor extends AbstractActor implements Switchable, Repairable, EnergyConsumer {
 
 
-    private Animation a_reactorOff;
-    private Animation a_reactorExtinguished;
-    private Animation a_reactorOn;
-    private Animation a_reactorHot;
-    private Animation a_reactorBroken;
+    private Animation a_reactorOn = new Animation("sprites/reactor_on.png", 80, 80, 0.1f, Animation.PlayMode.LOOP_PINGPONG);
+    private Animation a_reactorOff = new Animation("sprites/reactor.png");
+    private Animation a_reactorHot = new Animation("sprites/reactor_hot.png", 80, 80, 0.05f, Animation.PlayMode.LOOP_PINGPONG);
+    private Animation a_reactorBroken = new Animation("sprites/reactor_broken.png", 80, 80, 0.1f, Animation.PlayMode.LOOP_PINGPONG);
+    private Animation a_reactorExtinguished = new Animation("sprites/reactor_extinguished.png");
 
-    private int                 temperature;
-    private int                 damage;
     private boolean isOn;
+    private int temperature;
+    private int damage;
+    private Animation animation;
     private Set<EnergyConsumer> devices;
-    private Animation           animation;
 
     public Reactor() {
         temperature = 0;
         damage = 0;
         isOn = false;
         devices = new HashSet<>();
-        a_reactorOn = new Animation("sprites/reactor_on.png", 80, 80, 0.1f, Animation.PlayMode.LOOP_PINGPONG);
-        a_reactorHot = new Animation("sprites/reactor_hot.png", 80, 80, 0.05f, Animation.PlayMode.LOOP_PINGPONG);
-        a_reactorBroken = new Animation("sprites/reactor_broken.png", 80, 80, 0.1f, Animation.PlayMode.LOOP_PINGPONG);
-        a_reactorExtinguished = new Animation("sprites/reactor_extinguished.png");
-        a_reactorOff = new Animation("sprites/reactor.png");
 
         animation = a_reactorOff;
+        setAnimation(animation);
+    }
+
+    private void updateAnimation() {
+        if (isOn) {
+            if (damage >= 100) {
+                animation = a_reactorBroken;
+                turnOff();
+            }
+            if (temperature >= 4000 && temperature < 6000) animation = a_reactorHot;
+            if (temperature < 4000) animation = a_reactorOn;
+        }
+        else if (damage < 100) animation = a_reactorOff;
+
         setAnimation(animation);
     }
 
@@ -74,20 +83,6 @@ public class Reactor extends AbstractActor implements Switchable, Repairable, En
         return false;
     }
 
-    public boolean isOn() {
-        return isOn;
-    }
-
-    public void turnOn() {
-        isOn = true;
-        if (devices != null) {
-            for (EnergyConsumer energyConsumer : devices){
-                if (isOn())
-                    energyConsumer.setPowered(true);
-            }
-        }
-        updateAnimation();
-    }
 
     public void turnOff() {
         isOn = false;
@@ -118,18 +113,13 @@ public class Reactor extends AbstractActor implements Switchable, Repairable, En
     }
 
     public boolean repair(Usable<Actor> hammer) {
-        if (damage > 0) {
-            hammer.useWith(this);
-            damage -= 50;
-            if (damage < 0)
-                damage = 0;
-            temperature -= 2000;
+        if (damage <= 0) return false;
+        hammer.useWith(this);
+        damage = ((damage - 50) < 0) ? 0 : damage - 50;
+        temperature -= 2000;
 
-            updateAnimation();
-
-            return true;
-        }
-        return false;
+        updateAnimation();
+        return true;
     }
 
     public void decreaseTemperature(int decrement) {
@@ -142,19 +132,6 @@ public class Reactor extends AbstractActor implements Switchable, Repairable, En
         }
     }
 
-    private void updateAnimation() {
-        if (isOn) {
-            if (damage >= 100) {
-                animation = a_reactorBroken;
-                turnOff();
-            }
-            if (temperature >= 4000 && temperature < 6000) animation = a_reactorHot;
-            if (temperature < 4000) animation = a_reactorOn;
-        }
-        else if (damage < 100) animation = a_reactorOff;
-
-        setAnimation(animation);
-    }
 
     public int getTemperature() {
         return temperature;
@@ -173,6 +150,23 @@ public class Reactor extends AbstractActor implements Switchable, Repairable, En
         if (isOn() && isOn) energyConsumer.setPowered(true);
         else energyConsumer.setPowered(false);
     }
+
+
+    public void turnOn() {
+        isOn = true;
+        if (devices != null) {
+            for (EnergyConsumer energyConsumer : devices){
+                if (isOn())
+                    energyConsumer.setPowered(true);
+            }
+        }
+        updateAnimation();
+    }
+
+    public boolean isOn() {
+        return isOn;
+    }
+
 
     public void removeDevice(EnergyConsumer energyConsumer) {
         if (energyConsumer != null) {
