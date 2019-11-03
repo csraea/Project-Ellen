@@ -10,40 +10,40 @@ import sk.tuke.kpi.oop.game.tools.Usable;
 import java.util.HashSet;
 import java.util.Set;
 
-public class Reactor extends AbstractActor implements Switchable, EnergyConsumer, Repairable {
+public class Reactor extends AbstractActor implements Switchable, Repairable, EnergyConsumer {
+
+
+    private Animation a_reactorOff;
+    private Animation a_reactorExtinguished;
+    private Animation a_reactorOn;
+    private Animation a_reactorHot;
+    private Animation a_reactorBroken;
 
     private int                 temperature;
     private int                 damage;
-    private boolean             isAlive;
+    private boolean isOn;
     private Set<EnergyConsumer> devices;
     private Animation           animation;
-    private Animation           reactorOff;
-    private Animation           reactor_extinguished;
-    private Animation           normalAnimation;
-    private Animation           hotAnimation;
-    private Animation           brokenAnimation;
 
     public Reactor() {
         temperature = 0;
         damage = 0;
-        isAlive = false;
+        isOn = false;
         devices = new HashSet<>();
-        normalAnimation = new Animation("sprites/reactor_on.png", 80, 80, 0.1f, Animation.PlayMode.LOOP_PINGPONG);
-        hotAnimation = new Animation("sprites/reactor_hot.png", 80, 80, 0.05f, Animation.PlayMode.LOOP_PINGPONG);
-        brokenAnimation = new Animation("sprites/reactor_broken.png", 80, 80, 0.1f, Animation.PlayMode.LOOP_PINGPONG);
-        reactor_extinguished = new Animation("sprites/reactor_extinguished.png");
-        reactorOff = new Animation("sprites/reactor.png");
+        a_reactorOn = new Animation("sprites/reactor_on.png", 80, 80, 0.1f, Animation.PlayMode.LOOP_PINGPONG);
+        a_reactorHot = new Animation("sprites/reactor_hot.png", 80, 80, 0.05f, Animation.PlayMode.LOOP_PINGPONG);
+        a_reactorBroken = new Animation("sprites/reactor_broken.png", 80, 80, 0.1f, Animation.PlayMode.LOOP_PINGPONG);
+        a_reactorExtinguished = new Animation("sprites/reactor_extinguished.png");
+        a_reactorOff = new Animation("sprites/reactor.png");
 
-        animation = reactorOff;
+        animation = a_reactorOff;
         setAnimation(animation);
     }
 
     @Override
     public boolean repair() {
-        if (damage > 0) {
-            damage -= 50;
-            if (damage < 0)
-                damage = 0;
+        if (damage > 0 && damage < 100) {
+            damage = ((damage - 50) < 0) ? 0 : damage - 50;
             temperature = (int) Math.ceil((damage / 0.025f) + 2000);
             updateAnimation();
             return true;
@@ -51,25 +51,23 @@ public class Reactor extends AbstractActor implements Switchable, EnergyConsumer
         return false;
     }
 
+
     @Override
     public void setPowered(boolean isPowered) {
-        if (isPowered)
-            turnOn();
-        else
-            turnOff();
+        if (isPowered) turnOn();
+        else turnOff();
     }
 
     @Override
     public void addedToScene(Scene scene) {
         super.addedToScene(scene);
-        //new PerpetualReactorHeating(1).scheduleFor(this);
         scene.scheduleAction(new PerpetualReactorHeating(1), this);
     }
 
     public boolean extinguish() {
-        if (animation == brokenAnimation) {
+        if (animation == a_reactorBroken) {
             temperature -= 4000;
-            animation = reactor_extinguished;
+            animation = a_reactorExtinguished;
             setAnimation(animation);
             return true;
         }
@@ -78,10 +76,8 @@ public class Reactor extends AbstractActor implements Switchable, EnergyConsumer
 
     public void addDevice(EnergyConsumer energyConsumer) {
         devices.add(energyConsumer);
-        if (isOn() && isAlive)
-            energyConsumer.setPowered(true);
-        else
-            energyConsumer.setPowered(false);
+        if (isOn() && isOn) energyConsumer.setPowered(true);
+        else energyConsumer.setPowered(false);
     }
 
     public void removeDevice(EnergyConsumer energyConsumer) {
@@ -92,11 +88,11 @@ public class Reactor extends AbstractActor implements Switchable, EnergyConsumer
     }
 
     public boolean isOn() {
-        return isAlive;
+        return isOn;
     }
 
     public void turnOn() {
-        isAlive = true;
+        isOn = true;
         if (devices != null) {
             for (EnergyConsumer energyConsumer : devices){
                 if (isOn())
@@ -107,7 +103,7 @@ public class Reactor extends AbstractActor implements Switchable, EnergyConsumer
     }
 
     public void turnOff() {
-        isAlive = false;
+        isOn = false;
         if (devices != null) {
             for (EnergyConsumer energyConsumer : devices){
                 energyConsumer.setPowered(false);
@@ -117,17 +113,13 @@ public class Reactor extends AbstractActor implements Switchable, EnergyConsumer
     }
 
     public void increaseTemperature(int increment) {
-        if (increment < 0 || !isAlive)
-            return;
-        //if (damage < 100) {
-        if (damage >= 33 && damage <= 66)
-            temperature += Math.round(increment * 1.5f);
-        else if (damage > 66)
-            temperature += increment * 2;
-        else
-            temperature += increment;
-        if (temperature >= 2000)
-            damage = (int) Math.floor((temperature - 2000) * 0.025f);
+        if (increment < 0 || !isOn) return;
+
+        if (damage >= 33 && damage <= 66) temperature += Math.round(increment * 1.5f);
+        else if (damage > 66) temperature += increment * 2;
+        else temperature += increment;
+        if (temperature >= 2000) damage = ((int) Math.floor((temperature - 2000) * 0.025f));
+
         if (temperature >= 6000) {
             damage = 100;
             for (EnergyConsumer energyConsumer : devices){
@@ -136,7 +128,6 @@ public class Reactor extends AbstractActor implements Switchable, EnergyConsumer
         }
 
         updateAnimation();
-        //}
     }
 
     public boolean repair(Usable<Actor> hammer) {
@@ -155,33 +146,25 @@ public class Reactor extends AbstractActor implements Switchable, EnergyConsumer
     }
 
     public void decreaseTemperature(int decrement) {
-        if (decrement < 0 || temperature < 0 || !isAlive)
-            return;
+        if (decrement < 0 || temperature < 0 || !isOn) return;
         if (damage < 100) {
-            if (damage >= 50)
-                temperature -= Math.round(decrement * 0.5f);
-            else
-                temperature -= decrement;
+            if (damage >= 50) temperature -= Math.round(decrement * 0.5f);
+            else temperature -= decrement;
 
             updateAnimation();
         }
     }
 
     private void updateAnimation() {
-        if (isAlive) {
+        if (isOn) {
             if (damage >= 100) {
-                animation = brokenAnimation;
+                animation = a_reactorBroken;
                 turnOff();
             }
-            if (temperature >= 4000 && temperature < 6000)
-                animation = hotAnimation;
-            if (temperature < 4000)
-                animation = normalAnimation;
-
-            //changeFrameDuration();
+            if (temperature >= 4000 && temperature < 6000) animation = a_reactorHot;
+            if (temperature < 4000) animation = a_reactorOn;
         }
-        else if (damage < 100)
-            animation = reactorOff;
+        else if (damage < 100) animation = a_reactorOff;
 
         setAnimation(animation);
     }
@@ -197,21 +180,4 @@ public class Reactor extends AbstractActor implements Switchable, EnergyConsumer
     public void setTemperature(int temperature) {
         this.temperature = temperature;
     }
-
-    /*public void changeFrameDuration() {
-        if (temperature >= 0 && temperature <= 1000)
-            animation.setFrameDuration(0.1f);
-        else if (temperature > 1000 && temperature <= 2000)
-            animation.setFrameDuration(0.09f);
-        else if (temperature > 2000 && temperature <= 3000)
-            animation.setFrameDuration(0.07f);
-        else if (temperature > 3000 && temperature <= 4000)
-            animation.setFrameDuration(0.06f);
-        else if (temperature > 4000 && temperature <= 5000)
-            animation.setFrameDuration(0.05f);
-        else if (temperature > 5000 && temperature < 6000)
-            animation.setFrameDuration(0.03f);
-    }
-
-     */
 }
