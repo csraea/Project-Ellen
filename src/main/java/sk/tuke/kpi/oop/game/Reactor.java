@@ -74,19 +74,6 @@ public class Reactor extends AbstractActor implements Switchable, Repairable, En
         return false;
     }
 
-    public void addDevice(EnergyConsumer energyConsumer) {
-        devices.add(energyConsumer);
-        if (isOn() && isOn) energyConsumer.setPowered(true);
-        else energyConsumer.setPowered(false);
-    }
-
-    public void removeDevice(EnergyConsumer energyConsumer) {
-        if (energyConsumer != null) {
-            energyConsumer.setPowered(false);
-            devices.remove(energyConsumer);
-        }
-    }
-
     public boolean isOn() {
         return isOn;
     }
@@ -179,5 +166,18 @@ public class Reactor extends AbstractActor implements Switchable, Repairable, En
 
     public void setTemperature(int temperature) {
         this.temperature = temperature;
+    }
+
+    public void addDevice(EnergyConsumer energyConsumer) {
+        devices.add(energyConsumer);
+        if (isOn() && isOn) energyConsumer.setPowered(true);
+        else energyConsumer.setPowered(false);
+    }
+
+    public void removeDevice(EnergyConsumer energyConsumer) {
+        if (energyConsumer != null) {
+            energyConsumer.setPowered(false);
+            devices.remove(energyConsumer);
+        }
     }
 }
