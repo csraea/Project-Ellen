@@ -47,8 +47,7 @@ public class Teleport extends AbstractActor {
 
             destinationTeleport.wasOutside = false;
             destinationTeleport.teleportAccess = false;
-            //  пришлось дописать, чтобы арена не выебывалась (ряд снизу)
-            destinationTeleport.teleportPlayer(player);
+
 
             this.wasOutside = false;
             this.teleportAccess = false;

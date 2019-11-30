@@ -6,7 +6,7 @@ plugins {
 group = "sk.tuke.kpi.oop"
 version = "1.0"
 
-val gamelibVersion = "2.5.0"
+val gamelibVersion = "2.5.1"
 
 repositories {
     mavenCentral()
@@ -18,7 +18,7 @@ java {
 }
 
 application {
-    mainClassName = "sk.tuke.kpi.gamelib.framework.Main"
+    mainClassName = "sk.tuke.kpi.oop.game.Main"
 }
 
 dependencies {
