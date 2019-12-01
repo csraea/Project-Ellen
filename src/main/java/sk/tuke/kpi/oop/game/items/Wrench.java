@@ -1,9 +1,9 @@
-package sk.tuke.kpi.oop.game.tools;
+package sk.tuke.kpi.oop.game.items;
 
 import sk.tuke.kpi.gamelib.graphics.Animation;
 import sk.tuke.kpi.oop.game.DefectiveLight;
 
-public class Wrench extends BreakableTool<DefectiveLight> {
+public class Wrench extends BreakableTool<DefectiveLight> implements Collectible{
 
     public Wrench() {
         super(2);
@@ -17,4 +17,10 @@ public class Wrench extends BreakableTool<DefectiveLight> {
             super.useWith(defectiveLight);
         }
     }
+
+    @Override
+    public Class<DefectiveLight> getUsingActorClass() {
+        return DefectiveLight.class;
+    }
+
 }

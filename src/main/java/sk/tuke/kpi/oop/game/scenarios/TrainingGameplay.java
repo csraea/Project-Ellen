@@ -8,7 +8,7 @@ import sk.tuke.kpi.gamelib.actions.Wait;
 import sk.tuke.kpi.gamelib.framework.Scenario;
 import sk.tuke.kpi.oop.game.Cooler;
 import sk.tuke.kpi.oop.game.Reactor;
-import sk.tuke.kpi.oop.game.tools.Hammer;
+import sk.tuke.kpi.oop.game.items.Hammer;
 
 public class TrainingGameplay extends Scenario {
 

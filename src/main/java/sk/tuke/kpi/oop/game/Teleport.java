@@ -3,14 +3,18 @@ package sk.tuke.kpi.oop.game;
 import org.jetbrains.annotations.NotNull;
 import sk.tuke.kpi.gamelib.Actor;
 import sk.tuke.kpi.gamelib.Scene;
+import sk.tuke.kpi.gamelib.actions.ActionSequence;
 import sk.tuke.kpi.gamelib.actions.Invoke;
+import sk.tuke.kpi.gamelib.actions.Wait;
 import sk.tuke.kpi.gamelib.framework.AbstractActor;
 import sk.tuke.kpi.gamelib.framework.Player;
 import sk.tuke.kpi.gamelib.framework.actions.Loop;
 import sk.tuke.kpi.gamelib.graphics.Animation;
+import sk.tuke.kpi.oop.game.items.GreenButton;
+import sk.tuke.kpi.oop.game.items.Usable;
 
 
-public class Teleport extends AbstractActor {
+public class Teleport extends AbstractActor implements Usable<Actor> {
 
     private Teleport destinationTeleport;
     private boolean teleportAccess;
@@ -95,4 +99,31 @@ public class Teleport extends AbstractActor {
         new Loop<Teleport>(new Invoke<>(this::wasPlayerOutside)).scheduleFor(this);
         new Loop<Teleport>(new Invoke<>(this::isPlayerInside)).scheduleFor(this);
     }
+
+    @Override
+    public void useWith(Actor actor) {
+        if (getScene()!=null) {
+            Reactor reactor = getScene().getFirstActorByType(Reactor.class);
+            if (actor.getClass() == GreenButton.class && reactor!=null && reactor.isOn()) {
+                new ActionSequence<Actor>(
+                    new Invoke<Actor>(this::end),
+                    new Wait<>(3),
+                    new Invoke<Actor>(() -> getScene().getGame().stop())
+                ).scheduleOn(getScene());
+            }
+        }
+    }
+
+    private void end(){
+
+        getScene().getGame().getOverlay().drawText("You Won!",
+            getScene().getGame().getWindowSetup().getWidth()/2,
+            getScene().getGame().getWindowSetup().getHeight()/2).showFor(3f);
+    }
+    @Override
+    public Class<Actor> getUsingActorClass() {
+        return Actor.class;
+    }
+
+
 }

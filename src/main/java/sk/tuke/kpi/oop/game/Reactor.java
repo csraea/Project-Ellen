@@ -5,7 +5,7 @@ import sk.tuke.kpi.gamelib.Scene;
 import sk.tuke.kpi.gamelib.framework.AbstractActor;
 import sk.tuke.kpi.gamelib.graphics.Animation;
 import sk.tuke.kpi.oop.game.actions.PerpetualReactorHeating;
-import sk.tuke.kpi.oop.game.tools.Usable;
+import sk.tuke.kpi.oop.game.items.Usable;
 
 import java.util.HashSet;
 import java.util.Set;
