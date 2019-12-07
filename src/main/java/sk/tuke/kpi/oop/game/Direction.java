@@ -1,13 +1,11 @@
 package sk.tuke.kpi.oop.game;
 
-
-
 public enum Direction {
-
     NORTH(0, 1), NORTHWEST(-1, 1), NORTHEAST(1,1),
     WEST(-1, 0), EAST(1, 0),
     SOUTH(0, -1), SOUTHWEST(-1, -1), SOUTHEAST(1, -1),
     NONE(0, 0);
+    public final int dx, dy;
 
     public int getDx() {
         return dx;
@@ -17,61 +15,49 @@ public enum Direction {
         return dy;
     }
 
-    public final int dx, dy;
-
-
     Direction(int dx, int dy) {
         this.dx = dx;
         this.dy = dy;
     }
 
     public float getAngle(){
-        return (float)Math.toDegrees( Math.atan2((double) dy,  (double) dx))-90;
+        return (float)Math.toDegrees(Math.atan2((double) dy,  (double) dx))-90;
     }
 
-    public Direction combine(Direction other){
-        int x;
-        int y;
-        if (this == Direction.NONE  ){
-            return other;
+    public Direction combine(Direction dir){
+        int x, y;
+        if (this == Direction.NONE){
+            return dir;
         }
-        if (other == null || other == Direction.NONE){
+        if (dir == null || dir == Direction.NONE){
             return this;
         }
 
-//        if (this.getDx() == 0) {
-//            x = other.getDx();
-//            y = this.getDy();
-//        } else {
-//            x = this.getDx();
-//            y = other.getDy();
-//        }
+        x = dir.getDx() + this.getDx();
+        y = dir.getDy() + this.getDy();
 
-        x = other.getDx() + this.getDx();
-
-        y = this.getDy() + other.getDy();
         int hx = update(x);
         int hy = update(y);
-        Direction help = Direction.NONE;
-        for (Direction dir : Direction.values()) {
-            if (dir.getDx() == hx && dir.getDy() == hy ){
-                help = dir;
+
+        Direction buf = Direction.NONE;
+        for (Direction d : Direction.values()) {
+            if (d.getDx() == hx && d.getDy() == hy ){
+                buf = d;
             }
         }
-        return help;
+        return buf;
     }
 
     public static Direction fromAngle(float angle){
         float helpAngle;
-        if (angle>180) {
+        if (angle > 180) {
             helpAngle = angle - 360;
-
             for (Direction help : Direction.values()) {
                 if (help.getAngle() == helpAngle) {
                     return help;
                 }
             }
-        }else{
+        } else {
             if (angle == 180) return Direction.SOUTH;
             if (angle == 135) return Direction.SOUTHWEST;
             else {
@@ -86,19 +72,7 @@ public enum Direction {
     }
 
     private int update(int arg){
-        if (arg >= 1)  return 1;
-        else {
-            if (arg <= -1) return -1;
-            else return 0;
-        }
-
+        return (arg >= 1) ? 1 : (arg <= -1) ? -1 : 0;
     }
-//    private int updateY(int y){
-//        if (y > 1)  y = 1;
-//        else {
-//            if (y < -1) y = -1;
-//        }
-//        return y;
-//    }
 }
 

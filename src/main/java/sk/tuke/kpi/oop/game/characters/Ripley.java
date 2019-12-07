@@ -26,6 +26,7 @@ public class Ripley extends CloneableActor implements Movable, Keeper<Collectibl
 
     private Firearm gun;
     private Health health;
+    private int energy;
     private int remainingAmmo;
     private Backpack backpack;
     public static final Topic<Ripley> RIPLEY_DIED = Topic.create("RIPLEY_DIED", Ripley.class);
@@ -54,33 +55,30 @@ public class Ripley extends CloneableActor implements Movable, Keeper<Collectibl
     public void startedMoving(Direction direction) {
         getAnimation().setRotation(direction.getAngle());
         getAnimation().play();
-
     }
 
     @Override
     public void stoppedMoving() {
         getAnimation().stop();
+
     }
 
-//    public void setEnergy(int energy) {
-//        if (energy <= 0 ){
-//            this.energy = 0;
-//            Animation dyingAnimation = new Animation("sprites/player_die.png", 32, 32, 0.1f);
-//            dyingAnimation.setPlayMode(Animation.PlayMode.ONCE);
-//            setAnimation(dyingAnimation);
-//            dyingAnimation.play();
-//
-//
-//            getScene().getMessageBus().publish(Ripley_DIED, this);
-//        }else{
-//            this.energy = energy;
-//        }
-//
-//    }
+    public void setEnergy(int energy) {
+        if (energy > 0) {
+            this.energy = energy;
+        } else {
+            this.energy = 0;
+            Animation dyingAnimation = new Animation("sprites/player_die.png", 32, 32, 0.1f, Animation.PlayMode.ONCE);
+            setAnimation(dyingAnimation);
+            dyingAnimation.play();
+            getScene().getMessageBus().publish(RIPLEY_DIED, this);
+        }
+    }
 
-//    public int getEnergy() {
-//        return energy;
-//    }
+    public int getEnergy() {
+        return energy;
+    }
+
 
     public int getRemainingAmmo() {
         return remainingAmmo;
@@ -124,7 +122,7 @@ public class Ripley extends CloneableActor implements Movable, Keeper<Collectibl
     }
 
     private void die(){
-//        health.onExhaustion(() -> {
+
         Animation dyingAnimation = new Animation("sprites/player_die.png", 32, 32, 0.1f);
         dyingAnimation.setPlayMode(Animation.PlayMode.ONCE);
         setAnimation(dyingAnimation);
@@ -134,17 +132,12 @@ public class Ripley extends CloneableActor implements Movable, Keeper<Collectibl
         movController.dispose();
         colController.dispose();
 
-//            dyingAnimation.play();
-//            for (SceneListener sceneListener : this.getScene().getListeners()) {
-//                this.getScene().dispose();
-//                sceneListener.getClass().
-//            }
         getScene().getMessageBus().publish(RIPLEY_DIED, this);
         new ActionSequence<Actor>(
             new Wait<Actor>(2f),
             new Invoke<Actor>(() -> getScene().getGame().stop())
         ).scheduleOn(getScene());
-//        });
+
     }
 
     private void updateHunger(){
@@ -187,8 +180,6 @@ public class Ripley extends CloneableActor implements Movable, Keeper<Collectibl
                 new Wait<>(1f)
             )
         ).scheduleOn(this.getScene());
-//        scene.cancelActions(this);
-//        onExhaustion();
     }
 
     private void alienIntersecting(){

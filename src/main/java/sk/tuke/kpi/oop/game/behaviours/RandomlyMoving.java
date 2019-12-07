@@ -1,0 +1,8 @@
+package sk.tuke.kpi.oop.game.behaviours;
+
+public class RandomlyMoving {
+
+    public RandomlyMoving(){
+
+    }
+}

@@ -16,7 +16,6 @@ public class Move<A extends Movable> implements Action<A> {
     private boolean firstExecution;
     private float duration;
 
-
     public Move(@NotNull Direction direction, float duration) {
         this.duration = duration;
         this.direction = direction;
@@ -27,6 +26,7 @@ public class Move<A extends Movable> implements Action<A> {
     public Move(@NotNull Direction direction) {
         this(direction, 0);
     }
+
     @Nullable
     @Override
     public A getActor() {
@@ -44,33 +44,11 @@ public class Move<A extends Movable> implements Action<A> {
     }
 
     @Override
-    public void execute(float deltaTime) {
-        if (!isDone()) {
-            if (firstExecution) {
-                actor.startedMoving(direction);
-                firstExecution = false;
-            }
-            duration -= deltaTime;
-            if (duration > 0) {
-                actor.setPosition(actor.getPosX() + direction.dx * actor.getSpeed(), actor.getPosY() + direction.dy * actor.getSpeed());
-                if (Objects.requireNonNull(actor.getScene()).getMap().intersectsWithWall(actor)) {
-                    actor.setPosition(actor.getPosX() - direction.dx * actor.getSpeed(), actor.getPosY() - direction.dy * actor.getSpeed());
-                    actor.collidedWithWall();
-                }
-            } else {
-                stop();
-            }
-        }
-    }
-
-    @Override
     public void reset() {
-
         actor.stoppedMoving();
         isDone = false;
         firstExecution = false;
-
-        duration=0;
+        duration = 0;
     }
 
     public void stop(){
@@ -78,6 +56,26 @@ public class Move<A extends Movable> implements Action<A> {
             actor.stoppedMoving();
             isDone = true;
             firstExecution = false;
+        }
+    }
+
+    @Override
+    public void execute(float deltaTime) {
+        if (!isDone()) {
+            if (firstExecution) {
+                actor.startedMoving(direction);
+                firstExecution = false;
+            }
+            duration -= deltaTime;
+            if (duration <= 0) {
+                stop();
+            } else {
+                actor.setPosition(actor.getPosX() + direction.dx * actor.getSpeed(), actor.getPosY() + direction.dy * actor.getSpeed());
+                if (Objects.requireNonNull(actor.getScene()).getMap().intersectsWithWall(actor)) {
+                    actor.setPosition(actor.getPosX() - direction.dx * actor.getSpeed(), actor.getPosY() - direction.dy * actor.getSpeed());
+                    actor.collidedWithWall();
+                }
+            }
         }
     }
 }
