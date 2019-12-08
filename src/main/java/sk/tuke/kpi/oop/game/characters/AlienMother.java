@@ -13,7 +13,7 @@ import sk.tuke.kpi.gamelib.graphics.Animation;
 public class AlienMother extends Alien {
 
     private Health health;
-    Disposable loop;
+    private Disposable loop;
 
     public AlienMother(){
         super(500, "alien mother");

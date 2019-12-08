@@ -16,7 +16,7 @@ import sk.tuke.kpi.oop.game.weapons.Gun;
 public class ShootingAlien extends Alien implements Armed{
 
     private Animation animation;
-    Firearm firearm;
+    private Firearm firearm;
 
     public ShootingAlien(){
         super(200, "shooting alien");
@@ -53,6 +53,5 @@ public class ShootingAlien extends Alien implements Armed{
             )
         ).scheduleOn(getScene());
     }
-
-
+    
 }

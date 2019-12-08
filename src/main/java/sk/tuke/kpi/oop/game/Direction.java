@@ -5,7 +5,7 @@ public enum Direction {
     WEST(-1, 0), EAST(1, 0),
     SOUTH(0, -1), SOUTHWEST(-1, -1), SOUTHEAST(1, -1),
     NONE(0, 0);
-    public final int dx, dy;
+    private final int dx, dy;
 
     public int getDx() {
         return dx;
