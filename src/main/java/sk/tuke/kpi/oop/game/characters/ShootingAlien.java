@@ -53,5 +53,5 @@ public class ShootingAlien extends Alien implements Armed{
             )
         ).scheduleOn(getScene());
     }
-    
+
 }
