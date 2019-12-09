@@ -97,12 +97,12 @@ public class Ripley extends CloneableActor implements Movable, Keeper<Collectibl
         scene.getGame().getOverlay().drawText("Hunger: "+hunger, 250, yTextPos);
         scene.getGame().getOverlay().drawText("Ammo: "+getFirearm().getAmmo(), 400, yTextPos);
         scene.getGame().getOverlay().drawText("Max ammo: "+getFirearm().getMaxAmmo(), 550, yTextPos);
-        scene.getGame().pushActorContainer(getContainer());
+        scene.getGame().pushActorContainer(getBackpack());
     }
 
 
     @Override
-    public ActorContainer<Collectible> getContainer() {
+    public ActorContainer<Collectible> getBackpack() {
         return backpack;
     }
 

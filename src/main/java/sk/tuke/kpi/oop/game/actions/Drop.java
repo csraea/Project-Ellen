@@ -14,9 +14,9 @@ public class Drop<A extends Actor> extends AbstractAction<Keeper<A>> {
     public void execute(float deltaTime) {
 
         if (!isDone() && getActor()!= null ) {
-            Actor item = getActor().getContainer().peek();
+            Actor item = getActor().getBackpack().peek();
             if(item != null) {
-                getActor().getContainer().remove(getActor().getContainer().peek());
+                getActor().getBackpack().remove(getActor().getBackpack().peek());
                 getActor().getScene().addActor(item, getActor().getPosX()+8, getActor().getPosY()+7);
 
             }

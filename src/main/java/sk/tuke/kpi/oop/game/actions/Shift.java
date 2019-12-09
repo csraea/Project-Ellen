@@ -13,7 +13,7 @@ public class Shift extends AbstractAction<Keeper<?>>{
     public void execute(float deltaTime) {
         if(!isDone()) {
             if (getActor() != null) {
-                getActor().getContainer().shift();
+                getActor().getBackpack().shift();
             }
             setDone(true);
         }

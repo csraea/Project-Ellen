@@ -43,9 +43,9 @@ public class KeeperController implements KeyboardListener {
     }
 
     public void pressB(Input.Key key) {
-        if (key == Input.Key.B && actor.getContainer().peek() != null && actor.getContainer().peek() instanceof Usable ) {
+        if (key == Input.Key.B && actor.getBackpack().peek() != null && actor.getBackpack().peek() instanceof Usable ) {
 
-            Usable<?> usable = (Usable<?>) actor.getContainer().peek();
+            Usable<?> usable = (Usable<?>) actor.getBackpack().peek();
             new Use<>(usable).scheduleOnIntersectingWith(actor);
         }
     }

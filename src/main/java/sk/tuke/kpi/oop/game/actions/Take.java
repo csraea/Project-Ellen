@@ -25,7 +25,7 @@ public class Take<A extends Actor> extends AbstractAction<Keeper<A>>{
         for (Actor a : getActor().getScene().getActors()) {
             if (takeableActorsClass.isInstance(a) && a.intersects(getActor())) {
                 try {
-                    getActor().getContainer().add(takeableActorsClass.cast(a));
+                    getActor().getBackpack().add(takeableActorsClass.cast(a));
                     getActor().getScene().removeActor(a);
                     break;
                 } catch (IllegalStateException exception) {

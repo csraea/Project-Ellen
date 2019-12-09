@@ -30,9 +30,9 @@ public class FirstSteps implements SceneListener {
 //        backpack = new Backpack()
         scene.addActor(energy, 100, 100);
         scene.addActor(ammo, 100, 0);
-        ripley.getContainer().add(extinguisher);
+        ripley.getBackpack().add(extinguisher);
         //ripley.getContainer().add(energy);
-        ripley.getContainer().add(hammer);
+        ripley.getBackpack().add(hammer);
         //ripley.getContainer().shift();
 
         //new Use<>(energy).scheduleOn(ripley);
@@ -74,7 +74,7 @@ public class FirstSteps implements SceneListener {
            // ripley.getContainer().add(ammo);
             scene.removeActor(ammo);
         }
-        scene.getGame().pushActorContainer(ripley.getContainer());
+        scene.getGame().pushActorContainer(ripley.getBackpack());
     }
 }
 
