@@ -22,8 +22,11 @@ public class Fire<A extends Armed> extends AbstractAction<A> {
 
     @Override
     public void execute(float deltaTime) {
-
-        if (isDone() || actor == null) return;
+        setDone(true);
+        if (isDone() || actor == null) {
+            setDone(true);
+            return;
+        }
 
         if (firstTime) {
             Fireable fireable = actor.getFirearm().fire();
@@ -37,7 +40,6 @@ public class Fire<A extends Armed> extends AbstractAction<A> {
             actor.getScene().addActor(fireable, actor.getPosX() + 8, actor.getPosY() + 8);
             new Move<Fireable>(Direction.fromAngle(actor.getAnimation().getRotation()), 9999999999f).scheduleFor(fireable);
         }
-        setDone(true);
 
     }
 

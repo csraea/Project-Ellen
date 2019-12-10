@@ -80,7 +80,7 @@ public class Bullet extends AbstractActor implements Fireable {
                     getScene().removeActor(this);
                 }
 
-                if (  actor.getClass() == Barrel.class) {
+                if (actor.getClass() == Barrel.class) {
                     ((Barrel) actor).destroy();
                     getScene().removeActor(this);
                     if (((Barrel) actor).getRemainingDurability() == 0) {

@@ -1,28 +1,30 @@
 package sk.tuke.kpi.oop.game.characters;
 
-    import org.jetbrains.annotations.NotNull;
-    import sk.tuke.kpi.gamelib.*;
-    import sk.tuke.kpi.gamelib.actions.ActionSequence;
-    import sk.tuke.kpi.gamelib.actions.Invoke;
-    import sk.tuke.kpi.gamelib.actions.Wait;
-    import sk.tuke.kpi.gamelib.framework.actions.Loop;
-    import sk.tuke.kpi.gamelib.graphics.Animation;
-    import sk.tuke.kpi.gamelib.messages.Topic;
-    import sk.tuke.kpi.oop.game.Direction;
-    import sk.tuke.kpi.oop.game.Keeper;
-    import sk.tuke.kpi.oop.game.Movable;
-    import sk.tuke.kpi.oop.game.characters.Prototype.CloneableActor;
-    import sk.tuke.kpi.oop.game.controllers.KeeperController;
-    import sk.tuke.kpi.oop.game.controllers.MovableController;
-    import sk.tuke.kpi.oop.game.controllers.ShooterController;
-    import sk.tuke.kpi.oop.game.items.Backpack;
-    import sk.tuke.kpi.oop.game.items.Collectible;
-    import sk.tuke.kpi.oop.game.weapons.Firearm;
-    import sk.tuke.kpi.oop.game.weapons.Gun;
+import org.jetbrains.annotations.NotNull;
+import sk.tuke.kpi.gamelib.Actor;
+import sk.tuke.kpi.gamelib.Disposable;
+import sk.tuke.kpi.gamelib.GameApplication;
+import sk.tuke.kpi.gamelib.Scene;
+import sk.tuke.kpi.gamelib.actions.ActionSequence;
+import sk.tuke.kpi.gamelib.actions.Invoke;
+import sk.tuke.kpi.gamelib.actions.Wait;
+import sk.tuke.kpi.gamelib.framework.actions.Loop;
+import sk.tuke.kpi.gamelib.graphics.Animation;
+import sk.tuke.kpi.gamelib.messages.Topic;
+import sk.tuke.kpi.oop.game.Direction;
+import sk.tuke.kpi.oop.game.Keeper;
+import sk.tuke.kpi.oop.game.Movable;
+import sk.tuke.kpi.oop.game.characters.Prototype.CloneableActor;
+import sk.tuke.kpi.oop.game.controllers.KeeperController;
+import sk.tuke.kpi.oop.game.controllers.MovableController;
+import sk.tuke.kpi.oop.game.controllers.ShooterController;
+import sk.tuke.kpi.oop.game.items.Backpack;
+import sk.tuke.kpi.oop.game.weapons.Firearm;
+import sk.tuke.kpi.oop.game.weapons.Gun;
 
-    import java.util.Objects;
+import java.util.Objects;
 
-public class Ripley extends CloneableActor implements Movable, Keeper<Collectible>, Armed, Alive{
+public class Ripley extends CloneableActor implements Movable, Keeper, Armed, Alive{
 
     private Firearm gun;
     private Health health;
@@ -102,7 +104,7 @@ public class Ripley extends CloneableActor implements Movable, Keeper<Collectibl
 
 
     @Override
-    public ActorContainer<Collectible> getBackpack() {
+    public Backpack getBackpack() {
         return backpack;
     }
 

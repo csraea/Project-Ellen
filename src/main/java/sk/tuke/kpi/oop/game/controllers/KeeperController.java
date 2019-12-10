@@ -12,9 +12,9 @@ import sk.tuke.kpi.oop.game.items.Usable;
 
 public class KeeperController implements KeyboardListener {
 
-    private Keeper<Collectible> actor;
+    private Keeper actor;
 
-    public KeeperController(Keeper<Collectible> actor) {
+    public KeeperController(Keeper actor) {
         this.actor = actor;
     }
 
