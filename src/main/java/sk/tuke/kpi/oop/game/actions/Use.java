@@ -9,31 +9,30 @@ import sk.tuke.kpi.oop.game.items.Usable;
 public class Use<A extends Actor> extends AbstractAction<A>{
 
     //private boolean done;
-    private Usable<A> item;
+    private Usable<A> itemToUse;
 
     public Use(Usable<A> item){
-        this.item = item;
+        this.itemToUse = item;
     }
 
-    @Override
-    public void execute(float deltaTime) {
-        if (!isDone()) {
-            item.useWith(getActor());
-            this.setDone(true);
-        }
-    }
-
-    public Disposable scheduleOnIntersectingWith(Actor mediatingActor) {
-        Scene scene = mediatingActor.getScene();
-        if (scene == null) return null;
-        Class<A> usingActorClass = item.getUsingActorClass();
-
-        for (Actor actor : scene) {
+    public Disposable scheduleForIntersectingWith(Actor mediatingActor) {
+        Scene currentScene = mediatingActor.getScene();
+        if (currentScene == null) return null;
+        Class<A> usingActorClass = itemToUse.getUsingActorClass();
+        for (Actor actor : currentScene) {
             if (mediatingActor.intersects(actor) && usingActorClass.isInstance(actor)) {
                 return this.scheduleFor(usingActorClass.cast(actor));
             }
         }
         return null;
+    }
+
+    @Override
+    public void execute(float deltaTime) {
+        if (!isDone()) {
+            itemToUse.useWith(getActor());
+            this.setDone(true);
+        }
     }
 
 }

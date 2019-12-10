@@ -18,36 +18,35 @@ public class KeeperController implements KeyboardListener {
         this.actor = actor;
     }
 
-    @Override
-    public void keyPressed(Input.Key key) {
-        if (key == Input.Key.ENTER) {
-            new Take<>(Collectible.class).scheduleFor(actor);
-        }
-        if (key == Input.Key.BACKSPACE) {
-            new Drop<Collectible>().scheduleFor(actor);
-        }
-        if (key == Input.Key.S) {
-            new Shift().scheduleFor(actor);
-        }
-        pressB(key);
-        pressU(key);
-    }
-
     private void pressU(Input.Key key) {
         if (key == Input.Key.U) {
             Usable<?> u = (Usable<?>) actor.getScene().getActors().stream().filter(actor::intersects).filter(Usable.class::isInstance).findFirst().orElse(null);
             if (u != null) {
-                new Use<>(u).scheduleOnIntersectingWith(actor);
+                new Use<>(u).scheduleForIntersectingWith(actor);
             }
         }
     }
 
-    public void pressB(Input.Key key) {
+    private void pressB(Input.Key key) {
         if (key == Input.Key.B && actor.getBackpack().peek() != null && actor.getBackpack().peek() instanceof Usable ) {
-
             Usable<?> usable = (Usable<?>) actor.getBackpack().peek();
-            new Use<>(usable).scheduleOnIntersectingWith(actor);
+            new Use<>(usable).scheduleForIntersectingWith(actor);
         }
+    }
+
+    @Override
+    public void keyPressed(Input.Key key) {
+        if (key == Input.Key.ENTER) {
+            new Take<Keeper>(Collectible.class).scheduleFor(actor);
+        }
+        if (key == Input.Key.BACKSPACE) {
+            new Drop<Keeper>().scheduleFor(actor);
+        }
+        if (key == Input.Key.S) {
+            new Shift<Keeper>().scheduleFor(actor);
+        }
+        pressB(key);
+        pressU(key);
     }
 
 }

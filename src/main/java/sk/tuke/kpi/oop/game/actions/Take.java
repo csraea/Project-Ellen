@@ -5,12 +5,12 @@ import sk.tuke.kpi.gamelib.framework.actions.AbstractAction;
 import sk.tuke.kpi.oop.game.Keeper;
 import sk.tuke.kpi.oop.game.items.Collectible;
 
-public class Take<A extends Actor> extends AbstractAction<Keeper>{
+public class Take<K extends Keeper> extends AbstractAction<K>{
 
-    private Class<A> takeableActorsClass;
+    private Class<Collectible> takeableClass;
 
-    public Take(Class<A> takeableActorsClass){
-        this.takeableActorsClass = takeableActorsClass;
+    public Take(Class<Collectible> takeableActorsClass){
+        this.takeableClass = takeableActorsClass;
     }
 
     public void  execute(float deltaTime){
@@ -24,9 +24,9 @@ public class Take<A extends Actor> extends AbstractAction<Keeper>{
 
     private void findIntersectingActor(){
         for (Actor a : getActor().getScene().getActors()) {
-            if (takeableActorsClass.isInstance(a) && a.intersects(getActor())) {
+            if (takeableClass.isInstance(a) && a.intersects(getActor())) {
                 try {
-                    getActor().getBackpack().add((Collectible) takeableActorsClass.cast(a));
+                    getActor().getBackpack().add(takeableClass.cast(a));
                     getActor().getScene().removeActor(a);
                     break;
                 } catch (IllegalStateException exception) {
@@ -35,5 +35,4 @@ public class Take<A extends Actor> extends AbstractAction<Keeper>{
             }
         }
     }
-
 }

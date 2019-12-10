@@ -4,7 +4,7 @@ import sk.tuke.kpi.gamelib.Actor;
 import sk.tuke.kpi.gamelib.framework.actions.AbstractAction;
 import sk.tuke.kpi.oop.game.Keeper;
 
-public class Drop<A extends Actor> extends AbstractAction<Keeper> {
+public class Drop<K extends Keeper> extends AbstractAction<K> {
 
     public Drop(){
         super();
@@ -24,4 +24,3 @@ public class Drop<A extends Actor> extends AbstractAction<Keeper> {
         setDone(true);
     }
 }
-
