@@ -20,7 +20,7 @@ public class ShootingAlien extends Alien implements Armed{
 
     public ShootingAlien(){
         super(200, "shooting alien");
-        animation = new Animation("sprites/lurker_alien.png", 32, 32, 0.1f);
+        animation = new Animation("sprites/alien.png", 32, 32, 0.1f);
         setAnimation(animation);
         firearm = new Gun(1000000);
     }

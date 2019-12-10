@@ -67,7 +67,6 @@ public class Bullet extends AbstractActor implements Fireable {
 //        if (getScene().getActors() != null) {
         for (Actor actor : getScene().getActors()) {
             if (actor.intersects(this)){
-
                 if (!(actor instanceof Ripley) && actor instanceof Alive) {
                     ((Alive) actor).getHealth().drain(50);
                     if (((Alive) actor).getHealth().getValue() <= 0){
@@ -79,19 +78,22 @@ public class Bullet extends AbstractActor implements Fireable {
                     }
                     getScene().removeActor(this);
                 }
+                help(actor);
+            }
+        } 
+//        }
+    }
 
-                if (actor.getClass() == Barrel.class) {
-                    ((Barrel) actor).destroy();
-                    getScene().removeActor(this);
-                    if (((Barrel) actor).getRemainingDurability() == 0) {
-                        while (!((Barrel) actor).isDestroyed()) {
+    private void help(Actor actor) {
+        if (actor.getClass() == Barrel.class) {
+            ((Barrel) actor).destroy();
+            getScene().removeActor(this);
+            if (((Barrel) actor).getRemainingDurability() == 0) {
+                while (!((Barrel) actor).isDestroyed()) {
 
-                        }
-                        getScene().removeActor(actor);
-                    }
                 }
+                getScene().removeActor(actor);
             }
         }
-//        }
     }
 }
