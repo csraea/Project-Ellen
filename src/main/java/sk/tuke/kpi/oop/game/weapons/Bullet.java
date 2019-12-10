@@ -80,7 +80,7 @@ public class Bullet extends AbstractActor implements Fireable {
                 }
                 help(actor);
             }
-        } 
+        }
 //        }
     }
 
