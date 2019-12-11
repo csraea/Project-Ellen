@@ -59,6 +59,9 @@ public class EscapeRoom implements SceneListener {
             if (name.equals("alien"))           return new Alien();
             if (name.equals("alien mother"))    return new AlienMother();
             if (name.equals("hammer"))          return new Hammer();
+            if (name.equals("exit door"))       return new Door("door",Door.Orientation.VERTICAL);
+            if (name.equals("front door"))      return new Door("door",Door.Orientation.VERTICAL);
+            if (name.equals("back door"))       return new Door("door",Door.Orientation.HORIZONTAL);
             if (name.equals("reactor")){        reactor = new Reactor(); reactor.turnOn(); return reactor; }
             else
                 return null;

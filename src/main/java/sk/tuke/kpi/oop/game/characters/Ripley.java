@@ -145,7 +145,7 @@ public class Ripley extends CloneableActor implements Movable, Keeper, Armed, Al
     }
 
     private void updateHunger(){
-        hunger += 0.025f;
+        hunger += 0.05f;
         if (hunger > 100){
             getHealth().drain((int)hunger-100);
         }
