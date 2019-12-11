@@ -9,11 +9,9 @@ import sk.tuke.kpi.gamelib.framework.AbstractActor;
 import sk.tuke.kpi.gamelib.framework.actions.Loop;
 import sk.tuke.kpi.gamelib.graphics.Animation;
 import sk.tuke.kpi.oop.game.Direction;
-import sk.tuke.kpi.oop.game.characters.AlienMother;
 import sk.tuke.kpi.oop.game.characters.Alive;
 import sk.tuke.kpi.oop.game.characters.Ripley;
 import sk.tuke.kpi.oop.game.items.Destroyable.Barrel;
-import sk.tuke.kpi.oop.game.items.GreenButton;
 
 public class Bullet extends AbstractActor implements Fireable {
 
@@ -24,7 +22,7 @@ public class Bullet extends AbstractActor implements Fireable {
 
     @Override
     public int getSpeed() {
-        return 4;
+        return 5;
     }
 
     @Override
@@ -76,13 +74,7 @@ public class Bullet extends AbstractActor implements Fireable {
     }
 
     private void pleh(Actor actor) {
-        if (((Alive) actor).getHealth().getValue() <= 0){
-            if (actor.getClass() == AlienMother.class){
-                getScene().addActor(new GreenButton(), actor.getPosX(), actor.getPosY());
-                getScene().removeActor(actor);
-            }
-            else getScene().removeActor(actor);
-        }
+        getScene().removeActor(actor);
         getScene().removeActor(this);
     }
 

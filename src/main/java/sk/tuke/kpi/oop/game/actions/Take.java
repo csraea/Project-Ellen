@@ -9,9 +9,10 @@ import java.util.Objects;
 
 public class Take<K extends Keeper> extends AbstractAction<K>{
 
+    Class<Collectible> takeableActorsClass;
 
     public Take(Class<Collectible> takeableActorsClass){
-
+        this.takeableActorsClass = takeableActorsClass;
     }
 
     @Override

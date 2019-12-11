@@ -18,13 +18,13 @@ public class AlienMother extends Alien {
     public AlienMother(){
         super(500, "alien mother");
         loop = null;
-        setAnimation(new Animation("sprites/mother.png", 112, 162, 0.2f));
+        setAnimation(new Animation("sprites/mother.png", 112, 162, 0.01f));
     }
 
     @Override
     public void removedFromScene(@NotNull Scene scene) {
-        loop.dispose();
         scene.cancelActions(this);
+        scene.removeActor(this);
     }
 
     @Override

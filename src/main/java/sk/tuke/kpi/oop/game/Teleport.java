@@ -10,7 +10,6 @@ import sk.tuke.kpi.gamelib.framework.AbstractActor;
 import sk.tuke.kpi.gamelib.framework.Player;
 import sk.tuke.kpi.gamelib.framework.actions.Loop;
 import sk.tuke.kpi.gamelib.graphics.Animation;
-import sk.tuke.kpi.oop.game.items.GreenButton;
 import sk.tuke.kpi.oop.game.items.Usable;
 
 
@@ -104,7 +103,7 @@ public class Teleport extends AbstractActor implements Usable<Actor> {
     public void useWith(Actor actor) {
         if (getScene()!=null) {
             Reactor reactor = getScene().getFirstActorByType(Reactor.class);
-            if (actor.getClass() == GreenButton.class && reactor!=null && reactor.isOn()) {
+            if (reactor!=null && reactor.isOn()) {
                 new ActionSequence<Actor>(
                     new Invoke<Actor>(this::end),
                     new Wait<>(3),
