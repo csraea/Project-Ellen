@@ -32,7 +32,7 @@ public class Ripley extends CloneableActor implements Movable, Keeper, Armed, Al
     private int remainingAmmo;
     private Backpack backpack;
     public static final Topic<Ripley> RIPLEY_DIED = Topic.create("RIPLEY_DIED", Ripley.class);
-    private int hunger;
+    private float hunger;
     private Disposable movController;
     private Disposable colController;
     private Disposable shController;
@@ -96,9 +96,11 @@ public class Ripley extends CloneableActor implements Movable, Keeper, Armed, Al
         int topOffset = GameApplication.STATUS_LINE_OFFSET;
         int yTextPos = windowHeight - topOffset;
         scene.getGame().getOverlay().drawText("Energy: "+health.getValue(), 100, yTextPos);
-        scene.getGame().getOverlay().drawText("Hunger: "+hunger, 250, yTextPos);
+        scene.getGame().getOverlay().drawText("Hunger: "+Math.ceil(hunger*10)/10f, 250, yTextPos);
         scene.getGame().getOverlay().drawText("Ammo: "+getFirearm().getAmmo(), 400, yTextPos);
         scene.getGame().getOverlay().drawText("Max ammo: "+getFirearm().getMaxAmmo(), 550, yTextPos);
+        scene.getGame().getOverlay().drawText("X: " + this.getPosX(), 570, yTextPos-20);
+        scene.getGame().getOverlay().drawText("Y: " + this.getPosY(), 670, yTextPos-20);
         scene.getGame().pushActorContainer(getBackpack());
     }
 
@@ -143,14 +145,14 @@ public class Ripley extends CloneableActor implements Movable, Keeper, Armed, Al
     }
 
     private void updateHunger(){
-        hunger++;
+        hunger += 0.025f;
         if (hunger > 100){
-            getHealth().drain(hunger-100);
+            getHealth().drain((int)hunger-100);
         }
     }
 
     public boolean eat(){
-        if (hunger == 0 ) return false;
+        if (hunger == 0) return false;
         if (hunger< 10){ hunger = 0; return true; }
         else{ hunger -= 10; return true; }
     }

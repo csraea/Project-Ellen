@@ -36,5 +36,7 @@
   <object id="17" name="alien mother" type="waiting2" x="112" y="224" width="78" height="127"/>
   <object id="18" name="alien" type="waiting2" x="304" y="416" width="32" height="32"/>
   <object id="19" name="energy" x="416" y="432" width="16" height="16"/>
+  <object id="20" name="hammer" x="416" y="320" width="16" height="16"/>
+  <object id="21" name="reactor" x="30" y="150" width="80" height="80"/>
  </objectgroup>
 </map>

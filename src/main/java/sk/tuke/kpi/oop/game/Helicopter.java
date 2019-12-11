@@ -3,9 +3,9 @@ package sk.tuke.kpi.oop.game;
 
 import sk.tuke.kpi.gamelib.actions.Invoke;
 import sk.tuke.kpi.gamelib.framework.AbstractActor;
-import sk.tuke.kpi.gamelib.framework.Player;
 import sk.tuke.kpi.gamelib.framework.actions.Loop;
 import sk.tuke.kpi.gamelib.graphics.Animation;
+import sk.tuke.kpi.oop.game.characters.Ripley;
 
 public class Helicopter extends AbstractActor {
 
@@ -19,7 +19,7 @@ public class Helicopter extends AbstractActor {
     }
 
     public void moveTo() {
-        Player player = (Player) getScene().getFirstActorByName("Player");
+        Ripley player = (Ripley) getScene().getFirstActorByName("ellen");
         if(player != null && player.getEnergy() >= 0) {
             if (player.getPosX() > this.getPosX()) {
                 setPosition(this.getPosX() + 1, this.getPosY());

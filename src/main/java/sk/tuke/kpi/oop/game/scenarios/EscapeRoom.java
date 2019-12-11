@@ -5,11 +5,13 @@ import sk.tuke.kpi.gamelib.Actor;
 import sk.tuke.kpi.gamelib.ActorFactory;
 import sk.tuke.kpi.gamelib.Scene;
 import sk.tuke.kpi.gamelib.SceneListener;
+import sk.tuke.kpi.oop.game.Reactor;
 import sk.tuke.kpi.oop.game.characters.Alien;
 import sk.tuke.kpi.oop.game.characters.AlienMother;
 import sk.tuke.kpi.oop.game.characters.Ripley;
 import sk.tuke.kpi.oop.game.items.Ammo;
 import sk.tuke.kpi.oop.game.items.Energy;
+import sk.tuke.kpi.oop.game.items.Hammer;
 import sk.tuke.kpi.oop.game.openables.Door;
 
 public class EscapeRoom implements SceneListener {
@@ -30,7 +32,6 @@ public class EscapeRoom implements SceneListener {
         scene.getMessageBus().subscribe(Ripley.RIPLEY_DIED, (Ripley) -> scene.getGame().getOverlay().drawText("Ripley Died!", 100, 100));
         scene.getGame().pushActorContainer(ellen.getBackpack());
 
-
     }
 
     @Override
@@ -44,7 +45,7 @@ public class EscapeRoom implements SceneListener {
     }
 
     public static class Factory implements ActorFactory {
-
+        Reactor reactor;
         @Nullable
         @Override
         public Actor create(String type, String name) {
@@ -57,6 +58,8 @@ public class EscapeRoom implements SceneListener {
             if (name.equals("ammo"))            return new Ammo();
             if (name.equals("alien"))           return new Alien();
             if (name.equals("alien mother"))    return new AlienMother();
+            if (name.equals("hammer"))          return new Hammer();
+            if (name.equals("reactor")){        reactor = new Reactor(); reactor.turnOn(); return reactor; }
             else
                 return null;
         }
