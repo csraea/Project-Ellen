@@ -8,8 +8,6 @@ import sk.tuke.kpi.oop.game.scenarios.Map;
 public class Main {
 
 
-
-
     public static void main(String[] args) {
 //        WindowSetup windowSetup = new WindowSetup("Project Ellen", 800, 600);
 //        Game game = new GameApplication(windowSetup);
@@ -34,7 +32,7 @@ public class Main {
         WindowSetup windowSetup = new WindowSetup("Project Ellen", 800, 600);
         Game game = new GameApplication(windowSetup);
         //Map.Factory factory = new Map.Factory();
-        Scene scene = new World("world","maps/escape-room/escape-room.tmx",new EscapeRoom.Factory());
+        Scene scene = new World("world","maps/escape-room/escape-room.tmx", new EscapeRoom.Factory());
 
         SceneListener sceneListener = new Map();
         game.addScene(scene);

@@ -15,8 +15,10 @@ public class ShooterController implements KeyboardListener {
 
     @Override
     public void keyPressed(Input.Key key) {
-        if (key == Input.Key.SPACE){
+        if (key == Input.Key.SPACE && actor != null && actor.getFirearm() != null){
             new Fire<>().scheduleFor(actor);
+            System.out.println();
+
         }
     }
 }

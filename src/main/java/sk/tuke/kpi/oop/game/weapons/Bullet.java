@@ -61,27 +61,29 @@ public class Bullet extends AbstractActor implements Fireable {
     }
 
 
-
     private void check(){
-
 //        if (getScene().getActors() != null) {
         for (Actor actor : getScene().getActors()) {
             if (actor.intersects(this)){
                 if (!(actor instanceof Ripley) && actor instanceof Alive) {
                     ((Alive) actor).getHealth().drain(50);
-                    if (((Alive) actor).getHealth().getValue() <= 0){
-                        if (actor.getClass() == AlienMother.class){
-                            getScene().addActor(new GreenButton(), actor.getPosX(), actor.getPosY());
-                            getScene().removeActor(actor);
-                        }
-                        else getScene().removeActor(actor);
-                    }
-                    getScene().removeActor(this);
+                    pleh(actor);
                 }
                 help(actor);
             }
         }
 //        }
+    }
+
+    private void pleh(Actor actor) {
+        if (((Alive) actor).getHealth().getValue() <= 0){
+            if (actor.getClass() == AlienMother.class){
+                getScene().addActor(new GreenButton(), actor.getPosX(), actor.getPosY());
+                getScene().removeActor(actor);
+            }
+            else getScene().removeActor(actor);
+        }
+        getScene().removeActor(this);
     }
 
     private void help(Actor actor) {
