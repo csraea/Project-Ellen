@@ -57,8 +57,8 @@ public enum Direction {
                 }
             }
         } else {
-            if (angle == 180) return Direction.SOUTH;
             if (angle == 135) return Direction.SOUTHWEST;
+            if (angle == 180) return Direction.SOUTH;
             else {
                 for (Direction pork : Direction.values()) {
                     if (pork.getAngle() == angle) {
