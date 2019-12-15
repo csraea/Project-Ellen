@@ -47,7 +47,11 @@ public class Barrel extends CloneableActor {
 
     private void act() {
         getScene().getMap().getTile(this.getPosX()/sixteen,this.getPosY()/sixteen).setType(MapTile.Type.CLEAR);
-        destroyed = true;
+        set(true);
         getScene().getMessageBus().publish(BARREL_DESTROYED, this);
+    }
+
+    private void set(boolean state) {
+        destroyed = state;
     }
 }

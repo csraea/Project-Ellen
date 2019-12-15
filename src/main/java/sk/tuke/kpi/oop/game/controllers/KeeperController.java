@@ -44,8 +44,8 @@ public class KeeperController implements KeyboardListener {
         if (key == Input.Key.S) {
             new Shift<Keeper>().scheduleFor(actor);
         }
-        pressB(key);
         pressU(key);
+        pressB(key);
     }
 
 }

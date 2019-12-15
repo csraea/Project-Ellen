@@ -45,18 +45,22 @@ public class MovableController implements KeyboardListener {
 
     private void updateMove(){
         Direction buf = Direction.NONE;
-        for (Direction direction: keys){
+        for (Direction direction : keys){
             if (direction != null){
                 buf = buf.combine(direction);
             }
         }
         if(keys.isEmpty() || move != null ){
-            move.stop();
+            check();
         }
         if (buf != Direction.NONE){
             move = new Move<>(buf, 999999f);
             negativeCase();
         }
+    }
+
+    private void check() {
+        move.stop();
     }
 
     private void negativeCase() {
