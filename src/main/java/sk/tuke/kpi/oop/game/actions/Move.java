@@ -72,10 +72,14 @@ public class Move<A extends Movable> implements Action<A> {
             } else {
                 actor.setPosition(actor.getPosX() + direction.getDx() * actor.getSpeed(), actor.getPosY() + direction.getDy() * actor.getSpeed());
                 if (Objects.requireNonNull(actor.getScene()).getMap().intersectsWithWall(actor)) {
-                    actor.setPosition(actor.getPosX() - direction.getDx() * actor.getSpeed(), actor.getPosY() - direction.getDy() * actor.getSpeed());
-                    actor.collidedWithWall();
+                    restore();
                 }
             }
         }
+    }
+
+    private void restore() {
+        actor.setPosition(actor.getPosX() - direction.getDx() * actor.getSpeed(), actor.getPosY() - direction.getDy() * actor.getSpeed());
+        actor.collidedWithWall();
     }
 }

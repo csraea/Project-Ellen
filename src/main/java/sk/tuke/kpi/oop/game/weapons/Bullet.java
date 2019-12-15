@@ -16,8 +16,7 @@ import sk.tuke.kpi.oop.game.items.Destroyable.Barrel;
 public class Bullet extends AbstractActor implements Fireable {
 
     public Bullet(){
-        Animation animation = new Animation("sprites/bullet.png", 16, 16);
-        setAnimation(animation);
+        setAnimation(new Animation("sprites/bullet.png", 16, 16));
     }
 
     @Override
@@ -37,14 +36,6 @@ public class Bullet extends AbstractActor implements Fireable {
 
     }
 
-//    @Override
-//    public boolean intersects(@NotNull Actor actor) {
-//        if (actor instanceof Alive){
-//            ((Alive) actor).getHealth().drain(50);
-//            getScene().removeActor(this);
-//        }
-//        return super.intersects(actor);
-//    }
 
     @Override
     public void addedToScene(@NotNull Scene scene) {
@@ -52,7 +43,6 @@ public class Bullet extends AbstractActor implements Fireable {
         new Loop<>(
             new ActionSequence<>(
                 new Invoke<>(this::check)
-//                        new Wait<>(0.5f)
             )
         ).scheduleOn(this.getScene());
 
@@ -60,7 +50,6 @@ public class Bullet extends AbstractActor implements Fireable {
 
 
     private void check(){
-//        if (getScene().getActors() != null) {
         for (Actor actor : getScene().getActors()) {
             if (actor.intersects(this)){
                 if (!(actor instanceof Ripley) && actor instanceof Alive) {
@@ -70,7 +59,6 @@ public class Bullet extends AbstractActor implements Fireable {
                 help(actor);
             }
         }
-//        }
     }
 
     private void pleh(Actor actor) {

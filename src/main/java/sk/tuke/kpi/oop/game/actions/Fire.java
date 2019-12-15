@@ -40,7 +40,5 @@ public class Fire<A extends Armed> extends AbstractAction<A> {
             new Move<Fireable>(Direction.fromAngle(actor.getAnimation().getRotation()), 9999999999f).scheduleFor(fireable);
         }
         setDone(true);
-
     }
-
 }
