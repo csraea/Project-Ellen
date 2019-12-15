@@ -26,6 +26,13 @@ import java.util.Objects;
 
 public class Ripley extends CloneableActor implements Movable, Keeper, Armed, Alive{
 
+    private int INITIAL_AMMO = 20;
+    private int INITIAL_HEALTH = 100;
+    private int INITIAL_CAPACITY = 10;
+    private int INITIAL_HUNGER = 50;
+    private Disposable movableController;
+    private Disposable collectibleController;
+    private Disposable shooterController;
     private Firearm gun;
     private Health health;
     private int energy;
@@ -33,19 +40,16 @@ public class Ripley extends CloneableActor implements Movable, Keeper, Armed, Al
     private Backpack backpack;
     public static final Topic<Ripley> RIPLEY_DIED = Topic.create("RIPLEY_DIED", Ripley.class);
     private float hunger;
-    private Disposable movController;
-    private Disposable colController;
-    private Disposable shController;
 
     public Ripley() {
         super("ellen");
         setAnimation(new Animation("sprites/player.png", 32, 32, 0.1f, Animation.PlayMode.LOOP_PINGPONG));
-        gun = new Gun(35);
-        health = new Health(100);
+        gun = new Gun(INITIAL_AMMO);
+        health = new Health(INITIAL_HEALTH);
         remainingAmmo = 50;
         getAnimation().stop();
-        backpack = new Backpack("Ripley's backpack", 10);
-        hunger = 50;
+        backpack = new Backpack("Ripley's backpack", INITIAL_CAPACITY);
+        hunger = INITIAL_HUNGER;
     }
 
     @Override
@@ -62,6 +66,7 @@ public class Ripley extends CloneableActor implements Movable, Keeper, Armed, Al
     @Override
     public void stoppedMoving() {
         getAnimation().stop();
+        INITIAL_HUNGER++;
 
     }
 
@@ -126,19 +131,23 @@ public class Ripley extends CloneableActor implements Movable, Keeper, Armed, Al
     }
 
     private void die(){
-
+        INITIAL_AMMO++;
         Animation dyingAnimation = new Animation("sprites/player_die.png", 32, 32, 0.1f);
         dyingAnimation.setPlayMode(Animation.PlayMode.ONCE);
         setAnimation(dyingAnimation);
-        shController.dispose();
-        movController.dispose();
-        colController.dispose();
+        destroyControllers();
         getScene().getMessageBus().publish(RIPLEY_DIED, this);
         new ActionSequence<Actor>(
             new Wait<Actor>(2f),
             new Invoke<Actor>(() -> getScene().getGame().stop())
         ).scheduleOn(getScene());
 
+    }
+
+    private void destroyControllers() {
+        shooterController.dispose();
+        movableController.dispose();
+        collectibleController.dispose();
     }
 
     private void updateHunger(){
@@ -158,18 +167,23 @@ public class Ripley extends CloneableActor implements Movable, Keeper, Armed, Al
     public void addedToScene(@NotNull Scene scene) {
         this.getHealth().onExhaustion(this::die);
         scene.getMessageBus().subscribe(Ripley.RIPLEY_DIED, (Ripley) -> scene.getGame().getOverlay().drawText("Ripley Died! ", 100, 100).showFor(2)) ;
-        MovableController movableController = new MovableController(this);
-        this.movController = scene.getInput().registerListener(movableController);
-
-        KeeperController collectorController = new KeeperController(this);
-        this.colController = scene.getInput().registerListener(collectorController);
-
-        ShooterController shooterController = new ShooterController(this);
-        this.shController = scene.getInput().registerListener(shooterController);
+        controllers(scene);
         super.addedToScene(scene);
 
         firstloop();
         secondloop();
+        INITIAL_CAPACITY--;
+    }
+
+    private void controllers(Scene scene) {
+        MovableController movableController = new MovableController(this);
+        this.movableController = scene.getInput().registerListener(movableController);
+
+        KeeperController collectorController = new KeeperController(this);
+        this.collectibleController = scene.getInput().registerListener(collectorController);
+
+        ShooterController shooterController = new ShooterController(this);
+        this.shooterController = scene.getInput().registerListener(shooterController);
     }
 
     private void alienIntersecting(){
@@ -177,8 +191,8 @@ public class Ripley extends CloneableActor implements Movable, Keeper, Armed, Al
             if (actor.intersects(this) && actor instanceof Enemy){
                 this.getHealth().drain(30);
             }
-
         }
+        INITIAL_HEALTH--;
     }
 
     public void kill(){

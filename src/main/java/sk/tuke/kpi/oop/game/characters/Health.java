@@ -29,6 +29,14 @@ public class Health {
         initialHealth = maximalHealth;
     }
 
+    private boolean getState() {
+        return isCalled;
+    }
+
+    private void setState(boolean state) {
+        isCalled = state;
+    }
+
     private void kokotdopici() {
         exhaust();
     }
@@ -45,9 +53,9 @@ public class Health {
 
     public void exhaust(){
         initialHealth = 0;
-        if (!isCalled){
+        if (!getState()){
             effects.forEach(ExhaustionEffect::apply);
-            isCalled = true;
+            setState(true);
         }
 
     }

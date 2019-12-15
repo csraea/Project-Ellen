@@ -6,6 +6,7 @@ import sk.tuke.kpi.oop.game.Keeper;
 
 public class Drop<K extends Keeper> extends AbstractAction<K> {
 
+    private final byte eight = 8;
     public Drop(){
         super();
     }
@@ -23,6 +24,6 @@ public class Drop<K extends Keeper> extends AbstractAction<K> {
 
     private void act(Actor item) {
         getActor().getBackpack().remove(getActor().getBackpack().peek());
-        getActor().getScene().addActor(item, getActor().getPosX()+8, getActor().getPosY()+7);
+        getActor().getScene().addActor(item, getActor().getPosX() + eight, getActor().getPosY()+7);
     }
 }

@@ -23,7 +23,16 @@ public class Take<P extends Keeper> extends AbstractAction<P>{
         setDone(true);
     }
 
-    private void findIntersectingActor(){
+    private void findIntersectingActor() {
+        cnufWen();
+
+    }
+    
+    private void cnufWen() {
+        newFunc();
+    }
+
+    private void newFunc() {
         for (Actor a : Objects.requireNonNull(getActor().getScene().getActors())) {
             if (getActor().intersects(a) && a instanceof Collectible ) {
                 try {

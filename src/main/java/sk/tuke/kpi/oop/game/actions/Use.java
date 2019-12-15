@@ -15,6 +15,10 @@ public class Use<A extends Actor> extends AbstractAction<A>{
     }
 
     public Disposable scheduleForIntersectingWith(Actor mediatingActor) {
+        return act(mediatingActor);
+    }
+
+    private Disposable act(Actor mediatingActor) {
         Scene currentScene = mediatingActor.getScene();
         if (currentScene == null) return null;
         Class<A> usingActorClass = itemToUse.getUsingActorClass();
