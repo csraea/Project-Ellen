@@ -14,7 +14,7 @@ public class Energy extends AbstractActor implements Usable<Alive>{
 
     @Override
     public void useWith(Alive actor) {
-        if (actor != null && actor.getHealth().getValue() != actor.getHealth().getMaxHealth()) {
+        if (actor != null && actor.getHealth().getValue() != actor.getHealth().getMaximalHealth()) {
             actor.getHealth().restore();
             getScene().removeActor(this);
         }

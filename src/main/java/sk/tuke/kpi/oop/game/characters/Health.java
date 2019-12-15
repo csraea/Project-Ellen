@@ -5,16 +5,16 @@ import java.util.List;
 
 public class Health {
 
-    private int initHealth;
-    private int maxHealth;
+    private int initialHealth;
+    private int maximalHealth;
     private List<ExhaustionEffect> effects;
-    private boolean called;
+    private boolean isCalled;
 
     public Health(int initHealth, int maxHealth){
-        this.initHealth = initHealth;
-        this.maxHealth = maxHealth;
+        this.initialHealth = initHealth;
+        this.maximalHealth = maxHealth;
         effects = new ArrayList<>();
-        called = false;
+        isCalled = false;
     }
 
     public Health(int health){
@@ -22,33 +22,33 @@ public class Health {
     }
 
     public int getValue() {
-        return initHealth;
+        return initialHealth;
     }
 
     public void refill(int amount){
-        if (initHealth + amount > maxHealth) initHealth = maxHealth;
-        else initHealth += amount;
+        if (initialHealth + amount > maximalHealth) initialHealth = maximalHealth;
+        else initialHealth += amount;
     }
 
     public void restore(){
-        initHealth = maxHealth;
+        initialHealth = maximalHealth;
     }
 
     public void drain(int amount){
-        if (initHealth - amount <= 0){
+        if (initialHealth - amount <= 0){
             exhaust();
-        }else initHealth -= amount;
+        } else initialHealth -= amount;
     }
 
-    public int getMaxHealth() {
-        return maxHealth;
+    public int getMaximalHealth() {
+        return maximalHealth;
     }
 
     public void exhaust(){
-        initHealth = 0;
-        if (!called){
+        initialHealth = 0;
+        if (!isCalled){
             effects.forEach(ExhaustionEffect::apply);
-            called = true;
+            isCalled = true;
         }
 
     }
