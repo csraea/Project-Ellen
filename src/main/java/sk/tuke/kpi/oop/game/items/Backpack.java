@@ -11,6 +11,7 @@ import java.util.List;
 
 public class Backpack implements ActorContainer<Collectible> {
 
+    private final byte one = 1;
     private String name;
     private int capacity;
     private List<Collectible> items;
@@ -61,7 +62,7 @@ public class Backpack implements ActorContainer<Collectible> {
     @Nullable
     @Override
     public Collectible peek() {
-        return (items.isEmpty()) ? null : items.get(items.size() - 1);
+        return (items.isEmpty()) ? null : items.get(items.size() - one);
     }
 
     @Override
@@ -71,7 +72,7 @@ public class Backpack implements ActorContainer<Collectible> {
 
     @Override
     public void shift() {
-        Collections.rotate(items, 1);
+        Collections.rotate(items, one);
     }
 
 }

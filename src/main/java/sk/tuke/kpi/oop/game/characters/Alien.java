@@ -28,12 +28,4 @@ public class Alien extends CloneableActor implements Movable, Alive, Enemy{
     public Health getHealth() {
         return health;
     }
-//
-//    private void die(){
-//        this.getScene().removeActor(this);
-//    }
-//
-//    public int zivot(){
-//        return getHealth().getValue();
-//    }
 }

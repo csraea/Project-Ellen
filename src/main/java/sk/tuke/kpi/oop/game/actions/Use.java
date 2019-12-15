@@ -8,7 +8,6 @@ import sk.tuke.kpi.oop.game.items.Usable;
 
 public class Use<A extends Actor> extends AbstractAction<A>{
 
-    //private boolean done;
     private Usable<A> itemToUse;
 
     public Use(Usable<A> item){
@@ -19,9 +18,9 @@ public class Use<A extends Actor> extends AbstractAction<A>{
         Scene currentScene = mediatingActor.getScene();
         if (currentScene == null) return null;
         Class<A> usingActorClass = itemToUse.getUsingActorClass();
-        for (Actor actor : currentScene) {
-            if (mediatingActor.intersects(actor) && usingActorClass.isInstance(actor)) {
-                return this.scheduleFor(usingActorClass.cast(actor));
+        for (Actor q : currentScene) {
+            if (mediatingActor.intersects(q) && usingActorClass.isInstance(q)) {
+                return this.scheduleFor(usingActorClass.cast(q));
             }
         }
         return null;

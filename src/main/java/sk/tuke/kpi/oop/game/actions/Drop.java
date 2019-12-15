@@ -12,15 +12,17 @@ public class Drop<K extends Keeper> extends AbstractAction<K> {
 
     @Override
     public void execute(float deltaTime) {
-
         if (!isDone() && getActor()!= null ) {
             Actor item = getActor().getBackpack().peek();
             if(item != null) {
-                getActor().getBackpack().remove(getActor().getBackpack().peek());
-                getActor().getScene().addActor(item, getActor().getPosX()+8, getActor().getPosY()+7);
-
+                act(item);
             }
         }
         setDone(true);
+    }
+
+    private void act(Actor item) {
+        getActor().getBackpack().remove(getActor().getBackpack().peek());
+        getActor().getScene().addActor(item, getActor().getPosX()+8, getActor().getPosY()+7);
     }
 }

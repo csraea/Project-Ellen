@@ -21,7 +21,7 @@ public enum Direction {
     }
 
     public float getAngle(){
-        return (float)Math.toDegrees(Math.atan2((double) dy,  (double) dx))-90;
+        return (float)Math.toDegrees(Math.atan2((double) dy,  (double) dx))-90f;
     }
 
     public Direction combine(Direction dir){

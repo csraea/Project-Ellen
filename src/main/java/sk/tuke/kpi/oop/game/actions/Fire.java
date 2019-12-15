@@ -28,11 +28,14 @@ public class Fire<A extends Armed> extends AbstractAction<A> {
                 return;
             }
             firstTime = false;
-
-            fireable.getAnimation().setRotation(Direction.fromAngle(getActor().getAnimation().getRotation()).getAngle());
-            getActor().getScene().addActor(fireable, getActor().getPosX() + 8, getActor().getPosY() + 8);
-            new Move<Fireable>(Direction.fromAngle(getActor().getAnimation().getRotation()), 9999999999f).scheduleFor(fireable);
+            action(fireable);
         }
         setDone(true);
+    }
+
+    private void action(Fireable fireable) {
+        fireable.getAnimation().setRotation(Direction.fromAngle(getActor().getAnimation().getRotation()).getAngle());
+        getActor().getScene().addActor(fireable, getActor().getPosX() + 8, getActor().getPosY() + 8);
+        new Move<Fireable>(Direction.fromAngle(getActor().getAnimation().getRotation()), 9999999999f).scheduleFor(fireable);
     }
 }

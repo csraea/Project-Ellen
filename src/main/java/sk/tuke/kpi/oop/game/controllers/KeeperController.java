@@ -7,7 +7,6 @@ import sk.tuke.kpi.oop.game.actions.Drop;
 import sk.tuke.kpi.oop.game.actions.Shift;
 import sk.tuke.kpi.oop.game.actions.Take;
 import sk.tuke.kpi.oop.game.actions.Use;
-import sk.tuke.kpi.oop.game.items.Collectible;
 import sk.tuke.kpi.oop.game.items.Usable;
 
 public class KeeperController implements KeyboardListener {
@@ -37,7 +36,7 @@ public class KeeperController implements KeyboardListener {
     @Override
     public void keyPressed(Input.Key key) {
         if (key == Input.Key.ENTER) {
-            new Take<Keeper>(Collectible.class).scheduleFor(actor);
+            new Take<>().scheduleFor(actor);
         }
         if (key == Input.Key.BACKSPACE) {
             new Drop<Keeper>().scheduleFor(actor);
