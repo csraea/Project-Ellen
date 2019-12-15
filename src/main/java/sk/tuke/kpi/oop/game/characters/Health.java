@@ -48,12 +48,11 @@ public class Health {
 
     }
 
-    /*
     public void refill(int amount){
         if (initialHealth + amount > maximalHealth) initialHealth = maximalHealth;
         else initialHealth += amount;
     }
-*/
+
     @FunctionalInterface
     public interface ExhaustionEffect {
         void apply();

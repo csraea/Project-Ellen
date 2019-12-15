@@ -11,6 +11,10 @@ public class Take<K extends Keeper> extends AbstractAction<K>{
 
     private Class<Collectible> takeableActorsClass;
 
+    public Take() {
+
+    }
+
     public Take(Class<Collectible> takeableActorsClass){
         this.takeableActorsClass = takeableActorsClass;
     }
