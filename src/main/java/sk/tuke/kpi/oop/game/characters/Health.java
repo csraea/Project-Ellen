@@ -25,11 +25,6 @@ public class Health {
         return initialHealth;
     }
 
-    public void refill(int amount){
-        if (initialHealth + amount > maximalHealth) initialHealth = maximalHealth;
-        else initialHealth += amount;
-    }
-
     public void restore(){
         initialHealth = maximalHealth;
     }
@@ -53,6 +48,12 @@ public class Health {
 
     }
 
+    /*
+    public void refill(int amount){
+        if (initialHealth + amount > maximalHealth) initialHealth = maximalHealth;
+        else initialHealth += amount;
+    }
+*/
     @FunctionalInterface
     public interface ExhaustionEffect {
         void apply();
