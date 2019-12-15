@@ -25,7 +25,7 @@ public enum Direction {
     }
 
     public Direction combine(Direction dir){
-        int x, y;
+        int x, y, ox, oy;
         if (this == Direction.NONE){
             return dir;
         }
@@ -35,9 +35,8 @@ public enum Direction {
 
         x = dir.getDx() + this.getDx();
         y = dir.getDy() + this.getDy();
-
-        int ox = update(x);
-        int oy = update(y);
+        ox = update(x);
+        oy = update(y);
 
         Direction buf = Direction.NONE;
         for (Direction l : Direction.values()) {
