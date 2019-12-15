@@ -10,6 +10,7 @@ import sk.tuke.kpi.oop.game.characters.Prototype.CloneableActor;
 public class Barrel extends CloneableActor {
 
     private final short sixteen  = 16;
+    private final short thirtytwo = 32;
     public static final Topic<Barrel> BARREL_DESTROYED  = Topic.create("barrel detroyed", Barrel.class);
     private int remainingDurability;
     private boolean destroyed;
@@ -31,18 +32,22 @@ public class Barrel extends CloneableActor {
 
     public void destroy(){
         if (remainingDurability == 1){
-            setAnimation(new Animation("sprites/large_explosion.png", 32, 32, 0.2f, Animation.PlayMode.ONCE));
+            setAnimation(new Animation("sprites/large_explosion.png", thirtytwo, thirtytwo, 0.2f, Animation.PlayMode.ONCE));
             getAnimation().play();
-            getScene().getMap().getTile(this.getPosX()/sixteen,this.getPosY()/sixteen).setType(MapTile.Type.CLEAR);
-            destroyed = true;
-            getScene().getMessageBus().publish(BARREL_DESTROYED, this);
+            act();
         }
-        remainingDurability--;
+        --remainingDurability;
     }
 
     @Override
     public void addedToScene(@NotNull Scene scene) {
         super.addedToScene(scene);
         getScene().getMap().getTile(this.getPosX()/sixteen,this.getPosY()/sixteen).setType(MapTile.Type.WALL);
+    }
+
+    private void act() {
+        getScene().getMap().getTile(this.getPosX()/sixteen,this.getPosY()/sixteen).setType(MapTile.Type.CLEAR);
+        destroyed = true;
+        getScene().getMessageBus().publish(BARREL_DESTROYED, this);
     }
 }

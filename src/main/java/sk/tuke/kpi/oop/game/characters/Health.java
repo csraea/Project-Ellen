@@ -29,9 +29,13 @@ public class Health {
         initialHealth = maximalHealth;
     }
 
+    private void kokotdopici() {
+        exhaust();
+    }
+
     public void drain(int amount){
         if (initialHealth - amount <= 0){
-            exhaust();
+            kokotdopici();
         } else initialHealth -= amount;
     }
 

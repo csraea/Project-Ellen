@@ -9,6 +9,8 @@ import java.util.Objects;
 
 public class Take<P extends Keeper> extends AbstractAction<P>{
 
+    private final byte zero = 0;
+    private final byte two = 2;
     public Take() {
 
     }
@@ -29,7 +31,7 @@ public class Take<P extends Keeper> extends AbstractAction<P>{
                     getActor().getScene().removeActor(a);
                     break;
                 } catch (IllegalStateException exception) {
-                    getActor().getScene().getOverlay().drawText(exception.getMessage(), 0, 0).showFor(2);
+                    getActor().getScene().getOverlay().drawText(exception.getMessage(), zero, zero).showFor(two);
                 }
             }
         }

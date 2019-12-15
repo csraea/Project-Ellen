@@ -58,11 +58,7 @@ public class Door extends AbstractActor implements Openable, Usable<Actor> {
         int x = this.getPosX() / 16;
         int y = this.getPosY() / 16;
         getScene().getMap().getTile(x,y).setType(MapTile.Type.CLEAR);
-        if (orientation == Orientation.VERTICAL) {
-            getScene().getMap().getTile(x,y+1).setType(MapTile.Type.CLEAR);
-        } else {
-            getScene().getMap().getTile(x+1, y).setType(MapTile.Type.CLEAR);
-        }
+        openHelp(x, y);
         getScene().getMessageBus().publish(DOOR_OPENED, this);
     }
 
@@ -73,11 +69,7 @@ public class Door extends AbstractActor implements Openable, Usable<Actor> {
         animation.stop();
         isOpened = false;
         getScene().getMap().getTile(this.getPosX()/16,this.getPosY()/16).setType(MapTile.Type.WALL);
-        if (orientation == Orientation.VERTICAL) {
-            getScene().getMap().getTile(this.getPosX() / 16, this.getPosY() / 16 + 1).setType(MapTile.Type.WALL);
-        } else {
-            getScene().getMap().getTile(this.getPosX() / 16+1,this.getPosY() / 16).setType(MapTile.Type.WALL);
-        }
+        closeHelp();
         getScene().getMessageBus().publish(DOOR_CLOSED, this);
     }
 
@@ -86,11 +78,22 @@ public class Door extends AbstractActor implements Openable, Usable<Actor> {
         super.addedToScene(scene);
         getScene().getMessageBus().publish(DOOR_CLOSED, this);
         getScene().getMap().getTile(this.getPosX()/16,this.getPosY()/16).setType(MapTile.Type.WALL);
+        closeHelp();
+    }
 
+    private void openHelp(int x, int y) {
+        if (orientation == Orientation.VERTICAL) {
+            getScene().getMap().getTile(x,y+1).setType(MapTile.Type.CLEAR);
+        } else {
+            getScene().getMap().getTile(x+1, y).setType(MapTile.Type.CLEAR);
+        }
+    }
+
+    private void closeHelp() {
         if (orientation == Orientation.VERTICAL) {
             getScene().getMap().getTile(this.getPosX() / 16, this.getPosY() / 16 + 1).setType(MapTile.Type.WALL);
         } else {
-            getScene().getMap().getTile(this.getPosX()/16+1,this.getPosY()/16).setType(MapTile.Type.WALL);
+            getScene().getMap().getTile(this.getPosX() / 16+1,this.getPosY() / 16).setType(MapTile.Type.WALL);
         }
     }
 }

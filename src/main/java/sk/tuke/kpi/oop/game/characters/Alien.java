@@ -52,6 +52,6 @@ public class Alien extends AbstractActor implements Movable, Alive, Enemy, Behav
     @Override
     public void addedToScene(@NotNull Scene scene) {
         super.addedToScene(scene);
-        behaviour.setUp(this);
+       // behaviour.setUp(this);
     }
 }

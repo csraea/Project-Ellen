@@ -36,13 +36,13 @@ public enum Direction {
         x = dir.getDx() + this.getDx();
         y = dir.getDy() + this.getDy();
 
-        int hx = update(x);
-        int hy = update(y);
+        int ox = update(x);
+        int oy = update(y);
 
         Direction buf = Direction.NONE;
-        for (Direction d : Direction.values()) {
-            if (d.getDx() == hx && d.getDy() == hy ){
-                buf = d;
+        for (Direction l : Direction.values()) {
+            if (l.getDx() == ox && l.getDy() == oy ){
+                buf = l;
             }
         }
         return buf;
@@ -51,19 +51,19 @@ public enum Direction {
     public static Direction fromAngle(float angle){
         float helpAngle;
         if (angle > 180) {
-            helpAngle = angle - 360;
-            for (Direction help : Direction.values()) {
-                if (help.getAngle() == helpAngle) {
-                    return help;
+            helpAngle = angle - 180*2;
+            for (Direction pork : Direction.values()) {
+                if (pork.getAngle() == helpAngle) {
+                    return pork;
                 }
             }
         } else {
             if (angle == 180) return Direction.SOUTH;
             if (angle == 135) return Direction.SOUTHWEST;
             else {
-                for (Direction help : Direction.values()) {
-                    if (help.getAngle() == angle) {
-                        return help;
+                for (Direction pork : Direction.values()) {
+                    if (pork.getAngle() == angle) {
+                        return pork;
                     }
                 }
             }

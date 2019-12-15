@@ -130,12 +130,9 @@ public class Ripley extends CloneableActor implements Movable, Keeper, Armed, Al
         Animation dyingAnimation = new Animation("sprites/player_die.png", 32, 32, 0.1f);
         dyingAnimation.setPlayMode(Animation.PlayMode.ONCE);
         setAnimation(dyingAnimation);
-
-
         shController.dispose();
         movController.dispose();
         colController.dispose();
-
         getScene().getMessageBus().publish(RIPLEY_DIED, this);
         new ActionSequence<Actor>(
             new Wait<Actor>(2f),
@@ -171,19 +168,8 @@ public class Ripley extends CloneableActor implements Movable, Keeper, Armed, Al
         this.shController = scene.getInput().registerListener(shooterController);
         super.addedToScene(scene);
 
-        new Loop<Actor>(
-            new ActionSequence<Actor>(
-                new Invoke<Actor>(this::updateHunger),
-                new Wait<>(1f)
-            )
-        ).scheduleOn(this.getScene());
-
-        new Loop<Actor>(
-            new ActionSequence<Actor>(
-                new Invoke<Actor>(this::alienIntersecting),
-                new Wait<>(1f)
-            )
-        ).scheduleOn(this.getScene());
+        firstloop();
+        secondloop();
     }
 
     private void alienIntersecting(){
@@ -198,5 +184,22 @@ public class Ripley extends CloneableActor implements Movable, Keeper, Armed, Al
     public void kill(){
         getHealth().exhaust();
     }
-}
 
+    private void firstloop() {
+        new Loop<Actor>(
+            new ActionSequence<Actor>(
+                new Invoke<Actor>(this::updateHunger),
+                new Wait<>(1f)
+            )
+        ).scheduleOn(this.getScene());
+    }
+
+    private void secondloop() {
+        new Loop<Actor>(
+            new ActionSequence<Actor>(
+                new Invoke<Actor>(this::alienIntersecting),
+                new Wait<>(1f)
+            )
+        ).scheduleOn(this.getScene());
+    }
+}
