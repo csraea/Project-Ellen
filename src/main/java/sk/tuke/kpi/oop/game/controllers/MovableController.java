@@ -37,7 +37,6 @@ public class MovableController implements KeyboardListener {
 
     @Override
     public void keyReleased(Input.Key key) {
-
         if (keyDirectionMap.containsKey(key)){
             keys.remove(keyDirectionMap.get(key));
             updateMove();
@@ -56,7 +55,11 @@ public class MovableController implements KeyboardListener {
         }
         if (buf != Direction.NONE){
             move = new Move<>(buf, 999999f);
-            move.scheduleFor(actor);
+            negativeCase();
         }
+    }
+
+    private void negativeCase() {
+        move.scheduleFor(actor);
     }
 }
